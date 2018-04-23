@@ -3,10 +3,10 @@
 #
 
 # Name of your site (displayed in the header)
-name: Matt Simpson
+name: Matt's Lab
 
 # Short bio or description (displayed in the header)
-description: Cloud Solution Architect working in Aotearoa (aka New Zealand)
+description: Blog about building cloud applications
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://raw.githubusercontent.com/msimpsonnz/msimpsonnz.github.io/master/images/mjs-logo.png
