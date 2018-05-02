@@ -50,15 +50,21 @@ Done! Not quite, push to Azure Web App and start hitting it with some traffic.
 There is a "Performance" tab in the Azure Portal which I can create a VSTS Cloud based load test from! I need to establish a baseline of the upper limits of what my app can handle for GETs and POSTs. So I build a couple of simple web tests in Visual Studio and used the VSTS Cloud base Load Testing to smash the API with 500 constant users for 5 minutes.
 
 ***VSTS GET Result***
+
 [<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-GET.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-GET.png)
 
 ***VSTS POST Result***
+
 [<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-POST.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-POST.png)
 
 ***SQL DTUs***
+
 [<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png)
 
 ***Cost Estimate***
+
 [<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-COST.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png)
 
 Ok, so not great results but this is not about how good the code it, it getting some facts about the system.
+
+In [part 2]({{ site.baseurl }}/AzureSummit-2/) we will talk about patterns to improve performance.
