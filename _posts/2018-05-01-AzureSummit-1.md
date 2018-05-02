@@ -27,10 +27,11 @@ We often get given a problem with someone else’s interpretation or assumptions
 
 Application Insights has three main areas:
 * Client Side Metrics
-    * The client side is JavaScript based function that runs on the client, this looks at page rates, response times, and failures.
+    * The client side is JavaScript based function that runs within the clients browser, this looks at page rates, response times, and failures.
 * Server Side Metrics
-    * 
+    * Server metrics run on the server and collect server perf. stats, page loads, HTTP error and tracks dependencies.
 * Custom Events
+    * Custom event can be run on client or server and allow us to infuse our domain specific logic on event handlers, for example, button click events in the browser on the clients side or custom logic extraction from method calls on the service side code.
 
  to give a client side view on page load but can also have custom metrics for specific application logic such as button clicks and tracking user execution.
 
