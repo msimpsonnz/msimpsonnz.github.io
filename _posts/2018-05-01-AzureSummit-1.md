@@ -13,11 +13,11 @@ So I really set out to tell a story about "how to do more with what you have....
 
 ## Bob's Awesome Appliances
 
-We didn't have a good single example so I created "Bob's Awesome Appliances"! Bob has move from running a business in his garage on Excel to trying to conquer the world with Single Page Apps, APIs and databases running in the cloud.
+We didn't have a good single example so I created "Bob's Awesome Appliances"! Bob has moved from running a business in his garage on Excel to trying to conquer the world with Single Page Apps, APIs and databases running in the cloud.
 
 The problem Bob was now having is that during peak sales on the website he was getting poor user experience and application performance. The frontend devs are blaming the backend devs and vice versa, he was losing money and every fix was a point solution.
 
-How do we fix this? Not just the performance issues, but how do we move forward, still allowing people to break things (unintentionally) but without the blame game.
+How do we really fix this? Not just the performance issues, but how do we move forward, still allowing innovation and features,  but without the blame game when things go wrong or slow down. All software has bugs, all software fails.....eventually.
 
 **Application Insights and VSTS to the rescue**
 
@@ -33,21 +33,19 @@ Application Insights has three main areas:
 * Custom Events
     * Custom event can be run on client or server and allow us to infuse our domain specific logic on event handlers, for example, button click events in the browser on the clients side or custom logic extraction from method calls on the service side code.
 
- to give a client side view on page load but can also have custom metrics for specific application logic such as button clicks and tracking user execution.
+There is so much more to this product like application [dependency tracking](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-asp-net-dependencies), [workbooks](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-usage-workbooks) and all the [client usage metrics](https://docs.microsoft.com/en-us/azure/application-insights/app-insights-usage-overview) currently in preview (as of May 18) but I might cover that in a follow up, otherwise I will never get this done!
 
-The server side has performance monitoring around server side loads, success, failure and can live stream direct from the application.
+## Application overview
 
-Custom metrics, as I said before, allow you to add your context to the application on domain specific events you care about.
+In the case of [my app](https://github.com/msimpsonnz/nzsummit18/Retail), this is a .NET Core Web Application using the [SPA hosting templates](https://docs.microsoft.com/en-us/aspnet/core/spa/?view=aspnetcore-2.1), I used VueJS to create Bob's Awesome frontend application and .NET Core WebAPI to host the BFF(backend for frontend). I like this pattern as all the code is in one place and to add App Insights, I just right click in Visual Studio and add the SDK. As the SPA template uses the MVC pattern, it drops the App Insights JS snip I need right in the shared _Layout.cshtml which means all the renders have telemetry straight away with no other code changes required.
 
-There is so much more to this product like application dependency maps, workbooks and all the user metrics currently in preview (as of May 18) but I might cover that in a follow up, otherwise I will never get this done!
-
-In the case of [my app](https://github.com/msimpsonnz/nzsummit18/Retail), this is a .NET Core Web Application using the SPA hosting extensions, I used VueJS to create Bob's Awesome frontend application and .NET Core WebAPI to host the BFF(backend for frontend). I like this pattern as all the code is in one place and to add App Insights, I just right click in Visual Studio and add the SDK. As the SPA template uses the MVC pattern, it drops the App Insights JS snip I need right in the shared _Layout.cshtml which means all the renders have telemetry straight away with no other code changes required.
-
-I then build some super simple functions, GET to retrieve top 10 products from a Azure SQL DB and POST to insert a newly purchased item. I did using [Dapper](https://github.com/StackExchange/Dapper), yes I could have used EF Core but this was built for speed and to prove a point, not for production! I was going for minimal setup here so I used 2 x B1 App Service and a B1 SQL DB (which has 5 DTUs)
+I then built some super simple functions, GET to retrieve top 10 products from an Azure SQL DB and POST to insert a newly purchased item. I did using [Dapper](https://github.com/StackExchange/Dapper), yes I could have used EF Core but this was built for speed and to prove a point, plus Dapper is awesome!! I was going for minimal setup here so I used 2 x B1 App Service and a B1 SQL DB (which has 5 DTUs)
 
 Done! Not quite, push to Azure Web App and start hitting it with some traffic.
 
-There is a "Performance" tab in the Azure Portal which I can create a VSTS Cloud based load test from! I need to establish a baseline of the upper limits of what my app can handle for GETs and POSTs. So I build a couple of simple web tests in Visual Studio and used the VSTS Cloud base Load Testing to smash the API with 500 constant users for 5 minutes.
+## Cloud based load testing
+
+There is a "Performance" tab in the Web App blade of the portal which I can create a VSTS Cloud based load test from! I need to establish a baseline of the upper limits of what my app can handle for GETs and POSTs. So I built a couple of simple web tests in Visual Studio and used the VSTS Cloud base Load Testing to smash the API with 500 constant users for 1 minutes.
 
 ***VSTS GET Result***
 
