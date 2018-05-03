@@ -49,19 +49,19 @@ There is a "Performance" tab in the Web App blade of the portal which I can crea
 
 ***VSTS GET Result***
 
-[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-GET.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-GET.png)
+[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-GET.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-GET.png)
 
 ***VSTS POST Result***
 
-[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-POST.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-POST.png)
+[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-POST.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-POST.png)
 
 ***SQL DTUs***
 
-[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png)
+[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png)
 
 ***Cost Estimate***
 
-[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-COST.png" style="width: 400px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png)
+[<img src="{{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-COST.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-05-01-AzureSummit/VSTS-BASE-SQL.png)
 
 Ok, so not great results but this is not about how good the code it, it getting some facts about the system.
 
