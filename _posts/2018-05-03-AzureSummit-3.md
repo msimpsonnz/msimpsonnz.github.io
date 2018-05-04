@@ -32,30 +32,7 @@ So I add the library and add this to `Startup.cs`
 
 Then I just add the new version of the controller and decorate it
 
-```
-    [ApiVersion("2.0")]
-    [Route("api/shop")]
-    public class ShopControllerV2 : Controller
-    {
-        private static HttpClient httpClient = new HttpClient();
-        private readonly IConfiguration _configuration;
-        private IMemoryCache _cache;
-        private IEventBus _eventBus;
-
-        public ShopControllerV2(IConfiguration configuration, IMemoryCache cache, IEventBus eventBus)
-        {
-            _configuration = configuration;
-            _cache = cache;
-            _eventBus = eventBus;
-        }
-
-        [HttpGet]
-        public IActionResult GetAllProducts()
-        {
-            //Action here
-        }
-    }
-```
+<script src="https://gist.github.com/msimpsonnz/ec1bb5fb560aa1fad7862aaf8bd20056.js"></script>
 
 Great, so now I can test my new service by adding `/api/shop?api-version=2.0` to my test. If I don't specify any `api-version` then the old code executes as normal. This is perfect, I can release my update safe in the knowledge I have not changed any of the old code and just letting MVC routing do its magic.
 
@@ -67,28 +44,7 @@ We can write our code to check if certain features are *"toggled"* or *"flagged"
 
 I have enabled a feature on the API to inject failures for every *"n"* request. This *"feature"* is enabled through environment variables and my controller method checks the state of the feature, if this is enabled then failures are going to occur. This is a good technique for getting in chaos engineering and deliberately introducing failures to test how the system reacts.
 
-```
-    [HttpGet]
-    public IActionResult GetAllProducts()
-    {
-        //Failure counter for random failure
-        failCounter++;
-        //Check if failure feature is enabled and fail every 'n' times
-        if (_feature.IsFeatureEnabled("enableFailures") && failCounter % _configuration.GetValue<int>("Failures:failureRate") == 0)
-        {
-            using (IDbConnection dbConnection = new SqlConnection(_configuration["Sql"]))
-            {
-                dbConnection.Open();
-                return Ok(dbConnection.Query<Product>("SELECT TOP 10 ProductId, Segment, Category, Description, ProductPrice FROM Product ORDER BY Product DESC"));
-            }
-        }
-        using (IDbConnection dbConnection = new SqlConnection(_configuration["Sql"]))
-        {
-            dbConnection.Open();
-            return Ok(dbConnection.Query<Product>("SELECT TOP 10 ProductId, Segment, Category, Description, ProductPrice FROM Product ORDER BY ProductId DESC"));
-        }
-    }
-```
+<script src="https://gist.github.com/msimpsonnz/08b10461dc1f0200b503883f1b9b1458.js"></script>
 
 ## Going global ##
 

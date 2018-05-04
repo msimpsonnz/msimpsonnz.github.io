@@ -38,26 +38,7 @@ services.AddMemoryCache();
 
 Then I can change my database call to use the cache
 
-```
-    [HttpGet]
-    public IActionResult GetAllProducts()
-    {
-        var cacheKey = "products";
-        var cacheEntry = _cache.GetOrCreate(cacheKey, entry =>
-        {
-            entry.SlidingExpiration = (TimeSpan.FromHours(1));
-
-            using (IDbConnection dbConnection = new SqlConnection(_configuration["Sql"]))
-            {
-                dbConnection.Open();
-                return dbConnection.Query<Product>("SELECT TOP 10 ProductId, Segment, Category, Description, ProductPrice FROM Product ORDER BY ProductId DESC");
-            }
-
-        });
-
-        return Ok(cacheEntry);
-    }
-```
+<script src="https://gist.github.com/msimpsonnz/f1d9f0118e1ff681ee05d85116301e0d.js"></script>
 
 Define a cache key, then check for it's existence, create it it's not there and use it for 1 hour before refreshing.
 
@@ -95,18 +76,7 @@ I wanted to do more with .NET Core and [Azure Functions](https://docs.microsoft.
 
 I was able to take some of the logic from the existing Web API code and I was still using Dapper as it has a .NET Standard library. Added a couple of Function [triggers and bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-triggers-bindings) and I was off and running.
 
-```
-public static class CreateOrderFromMsg
-{
-    [FunctionName("CreateOrderFromMsg")]
-    public static async Task Run([ServiceBusTrigger("salesorder")]string msg, TraceWriter log)
-    {
-        if (log != null) log.Info(msg);
-        SalesOrder msgObj = JsonConvert.DeserializeObject<SalesOrder>(msg);
-        await DBHelper.CreateOrder(msgObj);
-    }
-}
-```
+<script src="https://gist.github.com/msimpsonnz/16583c9d6b4815e61a4cc1774edf066b.js"></script>
 
 However, as I have my Function app running in a [Consumption Plan](https://docs.microsoft.com/en-us/azure/azure-functions/functions-scale) if I just dump 000's of messages on the queue, Functions hosts will spool up to meet demand, smash my SQL DB and I will be in the same position as before. No drama, I can use the `host.json` config of the Function App to set `maxConcurrentCalls` to `1` so that the runtime will process a single message at a time and I can protect the backend data store.
 
@@ -134,7 +104,7 @@ Ok..calm down...how much did this cost me?
 
 **DOUBLE BOOM!!**
 
-Yes, that's right folks all of this could be yours, for the princely sum of an additional `$29 NZD` (May 2018 public price list)
+Yes, that's right folks all of this could be yours, for the princely sum of an additional **$29 NZD** (May 2018 public price list)
 
 Ok, all jokes aside, the development effort - code, testing and deployment pails in comparison to cost of the infrastructure, but I guess that was the point I was trying to make with all of this.
 
