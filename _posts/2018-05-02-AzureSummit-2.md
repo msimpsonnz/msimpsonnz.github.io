@@ -30,11 +30,7 @@ So my app is pretty simple and I am using Vue to do some heavy lifting on the cl
 
 Ok...ok...disclaimer read and homework done, what next? [In-memory Caching](https://docs.microsoft.com/en-us/aspnet/core/performance/caching/memory?view=aspnetcore-2.1)
 
-Great so I can add the following to `Startup.cs` under `ConfigureServices`
-
-```
-services.AddMemoryCache();
-```
+Great so in my .NET Core WebAPI `Startup.cs` under `ConfigureServices`, I can add `services.AddMemoryCache();`
 
 Then I can change my database call to use the cache
 

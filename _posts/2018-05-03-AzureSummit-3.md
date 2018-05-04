@@ -21,14 +21,7 @@ Awesome, we now have a library that supports versioning using URL path, query st
 
 So I add the library and add this to `Startup.cs`
 
-```
-    services.AddApiVersioning(options =>
-    {
-        options.ReportApiVersions = true;
-        options.AssumeDefaultVersionWhenUnspecified = true;
-        options.DefaultApiVersion = new ApiVersion(majorVersion: 1, minorVersion: 0);
-    });
-```
+<script src="https://gist.github.com/msimpsonnz/c3168ee510cd938b72240548c81d9945.js"></script>
 
 Then I just add the new version of the controller and decorate it
 
@@ -72,4 +65,6 @@ And this is what it ended up costing
 
 ## That's a wrap ##
 
-That's it! I hope you enjoyed this mini series and found it useful. Any feedback is welcome, but I need to get my blog comments sorted first! So please hit me up on Twitter or LinkedIn.
+So we started out benchmarking performance, identified root cause, implemented a new fix using versioning, took a look a feature flags and finished it all off by deploying in another geo to provide DR and improved UX!
+
+That's it! I hope you enjoyed this mini series and found it useful. Any constructive feedback is welcome and please hit me up on Twitter or LinkedIn.
