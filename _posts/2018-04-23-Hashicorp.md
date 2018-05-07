@@ -19,9 +19,9 @@ I then added my [Azure Container Service](https://docs.microsoft.com/en-us/azure
 
 ### State of the nation
 
-So I had a couple of modules and repeatable deployment, but as got deeper into this, I realised that the state engine was going to be an interesting concept and something that I needed to get right!
+So I had a couple of modules and repeatable deployment, but as I got deeper into this, I realised that the state engine was going to be an interesting concept and something that I needed to get right!
 
-I found this out the hard way! I setup the [Azure backend State provider](https://www.terraform.io/docs/backends/types/azurerm.html) options, which allows you to store the state file in Azure Blob storage. Then I messed around with the blob naming scheme as I wasn't happy with is, this resulted in corrupting my state, which ended up having to import this again from the running Azure resources which was a pain.
+I found this out the hard way! I setup the [Azure backend State provider](https://www.terraform.io/docs/backends/types/azurerm.html) option, which allows you to store the state file in Azure Blob storage. Then I messed around with the blob naming scheme as I wasn't happy, this resulted in corrupting my state, which ended up having to import this again from the running Azure resources which was a pain.
 
 Digging in on state, I found the general recommendation was to use a separate Terraform "repo" for each "service" I was creating, so I had a "VNET" service, "ACS" service and would soon scale out to "App Frontend" and "App Backend" services, all requiring their own state and individual configurations.
 
