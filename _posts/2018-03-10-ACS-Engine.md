@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Azure Container Service Engine (aks ACS-Engine)
+title: Azure Container Service Engine (aka ACS-Engine)
 ---
 
 Just a quick update this week. I have been working on a project where we are going to migrate Kubernetes to Azure, we really wanted to offload the management using [AKS](https://docs.microsoft.com/en-us/azure/aks/), which is Kubernetes as a Service on Azure, but unfortunately at the time of writing (Mar 18) we are not able to provision AKS into a custom VNET. At this time, AKS creates it own VNET using `10.0.0.0\8`, which isn't great at this overlaps with the migration network.
