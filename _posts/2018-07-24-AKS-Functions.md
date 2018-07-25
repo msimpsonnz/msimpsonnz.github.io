@@ -3,6 +3,8 @@ layout: post
 title: Azure Kubernetes Service and Azure Functions
 ---
 
+[<img src="{{ site.baseurl }}/images/2018-07-24-AKS-Functions/k8splusfx.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-07-24-AKS-Functions/k8splusfx.png)
+
 # Orchestration with the power of Functions (K8s^F)
 
 I have been a long time fan of both orchestrators and Functions as a Service (or Serverless if you like).
