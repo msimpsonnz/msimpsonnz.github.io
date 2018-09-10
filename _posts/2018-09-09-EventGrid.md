@@ -20,7 +20,7 @@ So that all sounds great, but what happens if the Event Grid endpoint fails, bac
 
 Scene set, we are going to switch out old for new and it looks a little like this
 
-[<img src="{{ site.baseurl }}/images/2018-09-09-Events/EventGrid.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-09-09-Events/EventGrid.PNG)
+[<img src="{{ site.baseurl }}/images/2018-09-09-Events/EventGrid.PNG" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-09-09-Events/EventGrid.PNG)
 
 We are going to:
 * Event Grid triggers a Function to run once a blob has been uploaded, this inserts some metadata into Cosmos
