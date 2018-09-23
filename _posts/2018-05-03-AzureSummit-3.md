@@ -3,6 +3,8 @@ layout: post
 title: Azure Summit 2018 - Part 3 - Going live and taking it global
 ---
 
+Part 3 of my presentation for Azure Summit 2018
+
 ## Part 3
 
 This is a three part post, so if you skipped [part 1]({{ site.baseurl }}/AzureSummit-1/) you might want to check that out first. Or are you still looking for [part 2]({{ site.baseurl }}/AzureSummit-2/)?

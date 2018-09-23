@@ -3,9 +3,7 @@ layout: post
 title: Azure Media Services v3 with Event Grid
 ---
 
-## TL;DR
-
-Walk through of using Azure CDN to improve upload speed to blob, which triggers Azure Media Services encode job using Azure Event Grid
+Walk through of using Azure Media Services and its recent support for Event Grid to create a event driven workflow from uploading a blob to encoding a video.
 
 ## Walk through using the new Azure Media Services v3 API to create a workflow
 

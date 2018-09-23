@@ -1,9 +1,10 @@
 ---
 layout: post
 title: Machine Learning Marathon
+summary: A quick "run" through on Azure ML Workbench and using it to predict my running ability. This post shows how I took data from my fitness tracker and wrangled it using ML Workbench and build a prediction algorithm using Python and Scikit Learn.
 ---
 
-A quick "run" through on Azure ML Workbench and using it to predict my running ability.
+A quick "run" through on Azure ML Workbench and using it to predict my running ability. This post shows how I took data from my fitness tracker and wrangled it using ML Workbench and build a prediction algorithm using Python and Scikit Learn.
 
 ## Running for Starship
 

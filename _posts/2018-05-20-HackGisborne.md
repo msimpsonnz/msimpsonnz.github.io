@@ -3,6 +3,8 @@ layout: post
 title: Hack Tairawhiti
 ---
 
+My summary of the the Hack Tairawhiti event in Gisborne - May 2018
+
 ## Start here, grow anywhere
 
 I was lucky enough to be invited along to New Zealand Trade and Enterprise event [Hack Tairawhiti](https://www.startheregrowanywhere.co.nz/) this weekend in Gisborne and Microsoft offered to support this event and my trip. This event was part of the larger #Techweek event that is talking place this week.
