@@ -1,6 +1,7 @@
 ---
 layout: post
 title: When events fail - monitoring Event Grid
+summary: Exploring the new "dead letter" feature of Azure Event Grid which allows us build resilient event driven workflows
 ---
 
 [Event Grid](https://docs.microsoft.com/en-us/azure/event-grid/) is a great service to build event driven workflows. Rather than spinning compute cycles, and cloud dollars, checking to see if something has happened we can use this service as Publish and Subscribe (aka PubSub).

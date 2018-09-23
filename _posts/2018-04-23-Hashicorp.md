@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Hashicorp - Terraform and Packer
+summary: A look at using Terraform to build infrastructure as code and Packer to build VM images
 ---
 
 ## Building clouds

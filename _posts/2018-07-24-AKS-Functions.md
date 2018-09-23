@@ -1,9 +1,8 @@
 ---
 layout: post
 title: Azure Kubernetes Service and Azure Functions
+summary: In this post I look at the Azure Functions runtime Docker feature, which allows us to package up this Serverless runtime and execute it anywhere
 ---
-
-In this post I look at the Azure Functions runtime Docker feature, which allows us to package up this Serverless runtime and execute it anywhere.
 
 [<img src="{{ site.baseurl }}/images/2018-07-24-AKS-Functions/k8splusfx.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2018-07-24-AKS-Functions/k8splusfx.png)
 

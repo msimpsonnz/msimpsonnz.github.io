@@ -1,10 +1,8 @@
 ---
 layout: post
 title: Azure Summit 2018 - Part 2 - Patterns and Practices
-
+summary: Part 2 of my presentation for Azure Summit 2018
 ---
-
-Part 3 of my presentation for Azure Summit 2018
 
 ## Part 2
 

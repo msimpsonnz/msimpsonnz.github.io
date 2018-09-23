@@ -1,9 +1,8 @@
 ---
 layout: post
 title: Hack Tairawhiti
+summary: My summary of the the Hack Tairawhiti event in Gisborne - May 2018
 ---
-
-My summary of the the Hack Tairawhiti event in Gisborne - May 2018
 
 ## Start here, grow anywhere
 

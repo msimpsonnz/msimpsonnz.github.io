@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Azure Summit 2018 - Part 1 - Establish a performance baseline
+summary: Part 1 of my presentation for Azure Summit 2018
 ---
 
 ## Azure Summit 2018

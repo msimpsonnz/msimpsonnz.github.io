@@ -1,9 +1,8 @@
 ---
 layout: post
 title: Azure Media Services v3 with Event Grid
+summary: Walk through of using Azure Media Services and its recent support for Event Grid to create a event driven workflow from uploading a blob to encoding a video
 ---
-
-Walk through of using Azure Media Services and its recent support for Event Grid to create a event driven workflow from uploading a blob to encoding a video.
 
 ## Walk through using the new Azure Media Services v3 API to create a workflow
 

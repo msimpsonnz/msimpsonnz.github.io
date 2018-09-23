@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Web Assembly as the next UI Framework
+summary: A look a up and coming projects using Web Assembly
 ---
 
 ## Using the browser as defacto client

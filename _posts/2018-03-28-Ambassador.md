@@ -1,6 +1,7 @@
 ---
 layout: post
 title: K8s Ingress
+summary: A brief look at the different options for exposing services running on Kubernetes using ingress controllers
 ---
 
 ## Too many proxies

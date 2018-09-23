@@ -1,9 +1,8 @@
 ---
 layout: post
 title: Azure Summit 2018 - Part 3 - Going live and taking it global
+summary: Part 3 of my presentation for Azure Summit 2018
 ---
-
-Part 3 of my presentation for Azure Summit 2018
 
 ## Part 3
 
