@@ -3,6 +3,8 @@ layout: post
 title: Machine Learning Marathon
 ---
 
+A quick "run" through on Azure ML Workbench and using it to predict my running ability.
+
 ## Running for Starship
 
 My daughter was born with a very rare medical condition, we didn't know this at the time and for the first 4 years were given multiple different diagnosis. We have had and continue to visit Starship children's hospital for numerous procedures, exams and operation and during one of the more serious events she was admitted for over a month in the neurology ward!!
