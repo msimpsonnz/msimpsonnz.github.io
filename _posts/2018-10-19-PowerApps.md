@@ -3,6 +3,8 @@ layout: post
 title: Prototype with PowerApps
 ---
 
+Using PowerApps and Customer Vision to create a mobile image classifier for what to recycle.
+
 ## Recycle or not
 
 I have been working on a presentation for an upcoming Microsoft event in Auckland later this month. The FutureNow event is focused on data and AI, I have been asked to talk about building Cognitive Services into apps.
