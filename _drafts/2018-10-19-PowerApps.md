@@ -22,7 +22,7 @@ The design canvas is web based and has loads of built in UI controls, navigation
 
 As per above, there are 'connectors' and these are basically prebuilt code you can enable in your PowerApp which saves having to handcraft API calls to external services. All the Cognitive Services have REST endpoints but I didn't have to worry about that, used the [Custom Vision connector](https://docs.microsoft.com/en-us/connectors/cognitiveservicescustomvision/), walked through the auth flow in the browser and done. All I need is to provide my Customer Vision model id in the app and done.
 
-So I spin up a new PowerApp, mobile format and then drag the camera control on to the design canvas and wire up the 'OnClick' event to my connector. No when I click the camera to take a picture, PowerApp will send the image off to Customer Vision and classify it.
+So I spin up a new PowerApp, mobile format and then drag the camera control on to the design canvas and wire up the 'OnSelect' event to my connector. Now when I click the camera to take a picture, PowerApp will send the image off to Customer Vision and classify it.
 
 <script src="https://gist.github.com/msimpsonnz/dd1645f77367981db26bba10613ea9f1.js"></script>
 
