@@ -37,7 +37,7 @@ The links above are great for partition guidance, however, there is a great talk
 
 The code for this can be found [here](https://github.com/msimpsonnz/nosql), but let's walk through the hashing technique we used.
 
-### Cosmos DB setup and bulk import
+### Bulk smash!
 
 We have created our Cosmos DB service, database and collection (using a specified partition key), detailed link for this via CLI is [here](https://docs.microsoft.com/en-us/azure/cosmos-db/scripts/create-database-account-collections-cli?toc=%2Fcli%2Fazure%2Ftoc.json#sample-script)
 
@@ -79,4 +79,51 @@ Once we have the hash we can extract the first 10 characters as a string like th
     }
 ```
 
+### X Part Queries
 
+Ok, so now down to actually running a query cross partition, this is being done on Cosmos DB instances with 20K Request Units provisioned.
+
+Query by id, below returns the following:
+`Cross Partition Query by Id Duration: 00:00:34.9694223 - RU:51647.73`
+
+```
+    public static async Task RunQueryById(DocumentClient _client, IOptions<CosmosConfig> _cosmosConfig, string queryId, bool crossPartition = false)
+    {
+        var feedOptions = new FeedOptions
+        {
+            EnableCrossPartitionQuery = crossPartition,
+            MaxDegreeOfParallelism = 256
+        };
+        var query = _client.CreateDocumentQuery<CosmosDeviceModel>(UriFactory.CreateDocumentCollectionUri(_cosmosConfig.Value.DatabaseName, _cosmosConfig.Value.CollectionName), feedOptions)
+            .Where(d => d.Id == queryId)
+            .AsDocumentQuery();
+        var timer = Stopwatch.StartNew();
+        var response = await query.ExecuteNextAsync();
+        timer.Stop();
+        Console.WriteLine($"Cross Partition Query by Id Duration: {timer.Elapsed} - RU:{response.RequestCharge}");
+
+    }
+```
+
+Query by id, below returns the following:
+`Cross Partition Query by Property Duration: 00:00:11.1021038 - RU:5.74`
+
+```
+    public static async Task RunQueryByProp(DocumentClient _client, IOptions<CosmosConfig> _cosmosConfig, string queryId, bool crossPartition = false)
+    {
+        var feedOptions = new FeedOptions {
+            EnableCrossPartitionQuery = crossPartition,
+            MaxDegreeOfParallelism = 256
+        };
+        var query = _client.CreateDocumentQuery<CosmosDeviceModel>(UriFactory.CreateDocumentCollectionUri(_cosmosConfig.Value.DatabaseName, _cosmosConfig.Value.CollectionName), feedOptions)
+            .Where(d => d.Uid == queryId)
+            .AsDocumentQuery();
+        var timer = Stopwatch.StartNew();
+        var response = await query.ExecuteNextAsync();
+        timer.Stop();
+        Console.WriteLine($"Cross Partition Query by Property Duration: {timer.Elapsed} - RU:{response.RequestCharge}");
+
+    }
+```
+
+Wow! So just by using a duplicate of the id field and query by that we can improve the query speed by *x3* and reduce requests required by over 50K!!
