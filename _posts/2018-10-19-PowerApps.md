@@ -1,9 +1,8 @@
 ---
 layout: post
 title: Prototype with PowerApps
+summary: Using PowerApps and Customer Vision to create a mobile image classifier for what to recycle
 ---
-
-Using PowerApps and Customer Vision to create a mobile image classifier for what to recycle.
 
 ## Recycle or not
 
