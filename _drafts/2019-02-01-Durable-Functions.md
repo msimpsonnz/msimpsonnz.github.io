@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Bulk loading and partitioning with Cosmos DB
+title: Cross Partition queries with Cosmos DB
 summary: A quick practical walk through of creating a scalable partition strategy for Cosmos DB, bulk loading data and putting it through it's paces, all using .NET Core SDK
 ---
 
