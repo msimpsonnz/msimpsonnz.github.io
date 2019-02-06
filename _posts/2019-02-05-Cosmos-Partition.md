@@ -4,12 +4,12 @@ title: Partitioning with Cosmos DB
 summary: A quick practical walk through of creating a scalable partition strategy for Cosmos DB
 ---
 
-#### *Disclaimer*
+## *Disclaimer*
 Partitioning is *HARD*!!
 The below was a around a specific use case and was interesting so thought I would share.
-Your requirements might not match, for example, we were unlikely to ever exceed the 10GB limit of a single partition in Cosmos. For example, average document size was 6Kb, this would allow of for ~1.667M documents per partition and for example with 256 partitions this would give us ~426M documents! This is 10x what we are designing for so we are good...at this stage of our architecture.
+Your requirements might not match, in this case, we were unlikely to ever exceed the 10GB limit of a single partition in Cosmos. For example, if our average document size was 6KB, this would allow of for ~1.667M documents per partition and with 256 partitions this would allow for ~426M documents! This is 10x what we are designing for so we are good...at this stage of our architecture.
 
-Check out my previous [article](https://msimpson.co.nz/Cosmos-Cross-Partition) around cross partition queries for more details.
+I would recommend checking out my my previous [article](https://msimpson.co.nz/Cosmos-Cross-Partition) around cross partition queries for more details and to validate your thinking around choosing a partition strategy.
 
 
 ### Getting the to the *part* of it ... *Part II*
