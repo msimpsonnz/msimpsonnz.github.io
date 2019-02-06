@@ -105,6 +105,6 @@ Right about now was when I exceeded the 20K Request Units of Cosmos, so as expec
 
 I guess I wasn't expecting this to go so well (and catastrophically bad at the same time) so I didn't have any retry or backoff handling in my application code. Durable Functions kept spinning up new instances and Cosmos kept throttling them, below is a screen shot from App Insights where you can see the outgoing requests match the outgoing dependency failures! This shows `82` servers running my Functions, this peaked at over `100` for a short time and really shows the power and scale of Functions. With that power comes great responsibility, which is non existent in my case!
 
-[<img src="{{ site.baseurl }}/images/2019-02-01-Cosmos-Durable-Functions/peaklivestream.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-02-01-Cosmos-Durable-Functions/peaklivestream.png")
+[<img src="{{ site.baseurl }}/images/2019-02-07-Cosmos-Durable-Functions/peaklivestream.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-02-07-Cosmos-Durable-Functions/peaklivestream.png")
 
 I managed to get the documents loaded by scaling up Cosmos to 50K RU's but I will be working on the Functions code to handel the failures gracefully.
