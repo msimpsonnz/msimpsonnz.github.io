@@ -107,4 +107,42 @@ I guess I wasn't expecting this to go so well (and catastrophically bad at the s
 
 [<img src="{{ site.baseurl }}/images/2019-02-07-Cosmos-Durable-Functions/peaklivestream.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-02-07-Cosmos-Durable-Functions/peaklivestream.png")
 
-I managed to get the documents loaded by scaling up Cosmos to 50K RU's but I will be working on the Functions code to handel the failures gracefully.
+### Try, try, try again
+
+Ok, so I added some retry logic to the Durable Function, which sorted the issue with failed requests. I also tweaked the batch size and number of documents per batch, 1000 batches of 10,000 documents seemed to be the best result, but this was balanced with how much I wanted to scale Cosmos to cope, so there is definitely a balance to find.
+
+This is the retry logic for the new Orchestrator Function
+
+```
+    [FunctionName("BulkLoader")]
+    public static async Task<bool> RunOrchestrator(
+        [OrchestrationTrigger] DurableOrchestrationContext context)
+    {
+        int batchSize;
+        int.TryParse(Environment.GetEnvironmentVariable("BatchSize"), out batchSize);
+
+        int firstRetryIntervalVar;
+        int.TryParse(Environment.GetEnvironmentVariable("FirstRetrySeconds"), out firstRetryIntervalVar);
+
+        int maxNumberOfAttemptsVar;
+        int.TryParse(Environment.GetEnvironmentVariable("MaxNumberOfAttempts"), out maxNumberOfAttemptsVar);
+
+        double backoffCoefficientVar;
+        double.TryParse(Environment.GetEnvironmentVariable("BackoffCoefficient"), out backoffCoefficientVar);
+
+        var retryOptions = new RetryOptions(
+            firstRetryInterval: TimeSpan.FromSeconds(firstRetryIntervalVar),
+            maxNumberOfAttempts: maxNumberOfAttemptsVar);
+        retryOptions.BackoffCoefficient = backoffCoefficientVar;
+
+        var outputs = new List<bool>();
+        var tasks = new Task<bool>[batchSize];
+        for (int i = 0; i < batchSize; i++)
+        {
+            tasks[i] = context.CallActivityWithRetryAsync<bool>("BulkLoader_Batch", retryOptions, i);
+        }
+
+        await Task.WhenAll(tasks);
+        return true;
+    }
+```
