@@ -18,7 +18,7 @@ az Cosmos DB collection create \
     --name $accountName \
     --db-name $databaseName \
     --partition-key-path /device \
-    --throughput 1000
+    --throughput 10000
 ```
 
 Great so now we build our .NET Core app, grab the Cosmos SDK and build a connection in code, I reused most of this from the [Cosmos DB BulkExecutor library for .NET sample](https://github.com/Azure/azure-cosmosdb-bulkexecutor-dotnet-getting-started), which as the name suggests is a great library for importing a lot of data. I was looking for 10M+ documents for this project so needed something that could get that done in a hurry.
