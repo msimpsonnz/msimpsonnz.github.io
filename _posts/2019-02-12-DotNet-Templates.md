@@ -6,7 +6,7 @@ summary: A quick guide on how to create a template project for .NET applications
 
 ### Every day I'm ~~hustling~~ consoling
 
-This is a bit of a "you're basic" post but I thought I would share all the same.
+This is a bit of a "Ya basic!" post but I thought I would share all the same.
 
 I end up writing a LOT of .NET Console Apps...a quick test here, a demo there and some automation every now and again.
 
@@ -32,9 +32,11 @@ So I create my Console App with all the setup I need and just a `.template.confi
 
 Couple of things I found out:
 * Make sure you get rid of any build folders `obj` and `bin` need to be gone otherwise you just get compiled `dll` files when you create a new project from the template
-* If you are installing the template from the local machine, drop the trailing `\` on the folder path otherwise the install will fail
+* If you are going to build a nuget then copy from the source files into a new folder as the package process does a build and restore which creates the directories and causes the issue in the above point.
+* If you are installing the template from the local machine, drop the trailing `\` on the folder path otherwise the install will fail `dotnet new -i "C:\somepath\noBackSlashOnTheEndOfThisFolder"`
 * Use `"preferNameDirectory": "true"` in `template.json` so the project gets named after the parent directory or --name parameter
 * Use `"sourceName": "<<Your Namespace>>"` in `template.json` to rename the namespace after the parent directory or --name parameter
+* Use `nuget pack` not `dotnet pack` as doesn't seem to like the dealing with folder paths
 
 That's it, hope this helps someone, but will probably just end up be a reference for me when I come back and update this to .NET Core 3.0!
 
