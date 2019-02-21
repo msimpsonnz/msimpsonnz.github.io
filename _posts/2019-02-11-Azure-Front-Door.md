@@ -29,11 +29,13 @@ I built a Ubuntu VM in Azure Central US and got the .NET Core app running, I als
 2. Upload via CDN to Azure Storage
 3. Upload via Front Door to Azure Storage
 
+The server was in Central US and the storage account was in Australia East, although I am still "within" Azure it was still a good test with distance in between.
+
 [<img src="{{ site.baseurl }}/images/2019-02-11-Azure-Front-Door/upload-test.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-02-11-Azure-Front-Door/upload-test.png")
 
-Direct = 14.05
-CDN = 8.13 (73% improvement)
-Front Door = 1.96 (717% improvement over Direct and 415% over CDN)
+* Direct = 14.05
+* CDN = 8.13 (73% improvement)
+* Front Door = 1.96 (717% improvement over Direct and 415% over CDN)
 
 WOW! Results really speak for themselves!
 
