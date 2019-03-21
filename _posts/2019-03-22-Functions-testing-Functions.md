@@ -6,6 +6,7 @@ summary: This time we work through building an API load test using Azure Durable
 
 ### TL;DR
 Don't be like me, try and use [loader.io], [JMeter], [Blazemeter], [locust.io], [Vegeta] ect ect. I needed something quick and effective and didn't have much experience with some of these tools, or they couldn't quiet meet my needs.
+Check out the [GitHub repo] for source.
 
 ### The problem
 We were working on a new project using Azure Functions and Cosmos DB, this was going to be a high throughput system and we wanted to ensure this would perform under load.
