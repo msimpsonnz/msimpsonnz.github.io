@@ -44,7 +44,7 @@ So I did a fair bit of digging on this and really came to the conclusion that I 
 
 I learnt heaps doing this and that is what I am taking away.
 
-[this post]: https://docs.microsoft.com/en-us/dotnet/standard/memory-and-spans/
+[this post]: https://docs.microsoft.com/en-us/dotnet/standard/memory-and-spans
 [GitHub issue]: https://github.com/dotnet/announcements/issues/90
 [great post]: https://www.stevejgordon.co.uk/an-introduction-to-optimising-code-using-span-t
 [demo]: https://github.com/msimpsonnz/misc/tree/master/src/Function.Demo.Span
