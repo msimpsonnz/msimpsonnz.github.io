@@ -37,7 +37,7 @@ A hash is a function that converts values, commonly used for crypto and checksum
 
 The links above are great for partition guidance, however, there is a great talk from Ignite 2018 on this topic and more and is really worth a watch, you can find that [here](https://www.youtube.com/watch?v=rapFud8vu0k).
 
-The code for this can be found [here](https://github.com/msimpsonnz/nosql), but let's walk through the hashing technique we used.
+The code for this can be found [here](https://github.com/msimpsonnz/misc-microsoft/tree/master/nosql), but let's walk through the hashing technique we used.
 
 ### SHA ba dabba doo
 

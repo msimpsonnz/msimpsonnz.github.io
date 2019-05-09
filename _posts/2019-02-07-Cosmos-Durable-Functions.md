@@ -25,7 +25,7 @@ Great so now we build our .NET Core app, grab the Cosmos SDK and build a connect
 
 ### To Console or not to Console?
 
-This code originally started life as a simple console app, [this](https://github.com/msimpsonnz/nosql/tree/a3528f4121f15670a69ca10e7cb263ee68286172) is the last commit before I changed tack.
+This code originally started life as a simple console app, [this](https://github.com/msimpsonnz/misc-microsoft/tree/a3528f4121f15670a69ca10e7cb263ee68286172) is the last commit before I changed tack.
 
 It was nice and all, but it would take a far bit of time to load the documents from my machine over the network.
 

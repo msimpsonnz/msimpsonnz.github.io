@@ -28,7 +28,7 @@ Digging in on state, I found the general recommendation was to use a separate Te
 
 This was fine, until I found an open GitHub [issue](https://github.com/hashicorp/terraform/issues/516) around the state engine storing sensitive info, this was opened a few years ago and a little concerning that a good solution had not been found yet (as of Apr 18). A few people had suggested using private source control and some workarounds for secrets but the general guidance for Terraform is not to use source control for state, hence, why the state backend feature was there.
 
-This was all good though, learning about the inner workings and finding out some of these things was what this was all about. I managed to get this working with ACS in a semi production view of how a good Terraform project should look, my repo is [here](https://github.com/msimpsonnz/tf-azure).
+This was all good though, learning about the inner workings and finding out some of these things was what this was all about. I managed to get this working with ACS in a semi production view of how a good Terraform project should look, my repo is [here](https://github.com/msimpsonnz/misc-microsoft/tree/master/tf-azure).
 
 ## Packer
 

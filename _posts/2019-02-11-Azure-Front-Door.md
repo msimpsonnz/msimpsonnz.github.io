@@ -42,4 +42,4 @@ WOW! Results really speak for themselves!
 [Azure Front Door]: https://azure.microsoft.com/en-us/services/frontdoor/
 [Blazor demo]: https://github.com/msimpsonnz/training-portal
 [deployment script]: https://github.com/msimpsonnz/training-portal/blob/master/deploy/deploy.sh
-[this app]: https://github.com/msimpsonnz/az-blob-uploader
+[this app]: https://github.com/msimpsonnz/misc-microsoft
