@@ -40,5 +40,5 @@ Couple of things I found out:
 
 That's it, hope this helps someone, but will probably just end up be a reference for me when I come back and update this to .NET Core 3.0!
 
-Link to the GitHub repo is [here](https://github.com/msimpsonnz/misc-microsoft/tree/master/dotnet-templates)
+Link to the GitHub repo is [here](https://github.com/msimpsonnz/msft-misc/tree/master/dotnet-templates)
 Link to Nuget package is [here](https://www.nuget.org/packages/MSimpson.ConsoleTemplate.CSharp/1.0.0)

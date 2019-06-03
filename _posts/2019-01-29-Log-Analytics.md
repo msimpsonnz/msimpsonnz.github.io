@@ -24,7 +24,7 @@ Again I don't want to get off track too much, but we ended up with a number of A
 
 App Insights has some great metrics and charts out the box, the [Live Stream](https://docs.microsoft.com/en-us/azure/azure-monitor/app/live-stream) is a great example. But if you want to get into some custom metrics queries, then [Kusto](https://docs.microsoft.com/en-us/azure/kusto/query/index) is the way to go, this is the query language used for Log Analytics which is the data store behind Application Insights, you can review the basics [here](https://docs.microsoft.com/en-us/azure/azure-monitor/app/analytics)
 
-For our scenario we had a couple of Function Apps deployed, the first would take a blob upload and run it through Azure Media Services (AMS), the second would take the output from AMS and notify our application, some sample code is [here](https://github.com/msimpsonnz/misc-microsoft/tree/master/MediaServices.Demo/MediaServices.Demo.Function).
+For our scenario we had a couple of Function Apps deployed, the first would take a blob upload and run it through Azure Media Services (AMS), the second would take the output from AMS and notify our application, some sample code is [here](https://github.com/msimpsonnz/msft-misc/tree/master/MediaServices.Demo/MediaServices.Demo.Function).
 
 So that is great we have a serverless encoding pipeline, but from Application Insights we have a big hole in our timeline, we cannot track AMS as a dependency, we just get a notification when the job is complete. So my problem was stitching these two functions together to find out how long it was taking from event trigger to application notified.
 

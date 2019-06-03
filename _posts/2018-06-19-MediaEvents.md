@@ -37,7 +37,7 @@ az storage account create --name mjsdemostrams \
 ```
 ## Azure Function to process Encoding Job
 
-I created a new [repo](https://github.com/msimpsonnz/misc-microsoft/tree/master/MediaServices.Demo) that has a Function with Event Grid trigger from a blob that queues up a Media Services Encoding job.
+I created a new [repo](https://github.com/msimpsonnz/msft-misc/tree/master/MediaServices.Demo) that has a Function with Event Grid trigger from a blob that queues up a Media Services Encoding job.
 
 
 ## Event Grid for Blob
