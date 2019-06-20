@@ -2,6 +2,7 @@
 layout: post
 title: Improving application response times with Amazon AppStream
 summary: In this post we look at using Amazon AppStream to provide better response times to remote users for sensitive internal apps
+tags: [aws, cdk, appstream2, single-sign-on]
 ---
 
 ### Streaming isn't just for movies

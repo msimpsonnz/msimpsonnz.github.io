@@ -2,6 +2,7 @@
 layout: post
 title: Getting API Gateway to post direct to SQS
 summary: In this post we refactor our CDK app to have API Gateway post directly to SQS and remove the need for Lambda to do this.
+tags: [aws, cdk, api-gateway, sqs]
 ---
 
 ### Do more with less

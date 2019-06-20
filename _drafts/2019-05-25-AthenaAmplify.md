@@ -2,6 +2,7 @@
 layout: post
 title: Athena Amplify'd
 summary: In this post we take a look at the Amplfiy framework as a quick and secure way to build a front end for AWS services
+tags: [aws, amplify, cognito, api-gateway, athena, lambda]
 ---
 
 ### ~~Mystify me~~ Amplify me!

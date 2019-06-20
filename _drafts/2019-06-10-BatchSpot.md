@@ -2,6 +2,7 @@
 layout: post
 title: Orchestrating custom code with AWS Batch
 summary: In this post we take a look at running a batch process across a fleet of EC2 Spot instances using custom code in a container.
+tags: [aws, cdk, batch, sqs, ecr, ecs, ec2, s3, vpc]
 ---
 
 ### This does not Spark joy
