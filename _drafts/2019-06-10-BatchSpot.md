@@ -34,7 +34,7 @@ The source for this can be found [here](https://github.com/msimpsonnz/aws-misc/t
 
 ### Contain this
 
-The AWS Batch User Guide has a [great example](https://docs.aws.amazon.com/batch/latest/userguide/array_index_example.html) of building a Docker image and parallel running this across a number of jobs. I've used much of this to scaffold out the infrastructure I needed using CDK. This guide covers creating the image, pushing to ECR and the Job Definition you need to run jobs.
+The Batch User Guide has a [great example](https://docs.aws.amazon.com/batch/latest/userguide/array_index_example.html) of building a Docker image and parallel running this across a number of jobs. I've used much of this to scaffold out the infrastructure I needed using CDK. This guide covers creating the image, pushing to ECR and the Job Definition you need to run jobs.
 
 Using EC2 Spot instances is a great solution for this, this isn't a mission critical or time sensitive job so I can get some significant savings by using Spot instances to run my containers. AWS Batch manages spinning up and down the compute environment when the jobs need to run so that I am only paying for running the jobs.
 

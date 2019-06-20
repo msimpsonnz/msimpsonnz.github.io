@@ -30,7 +30,7 @@ It really is changing how we can approach taking an idea to something secure and
 With building little apps to prove something out it is often a trap to get something working at the expense of doing it with security in mind.
 Now adding auth to a web app is not that "hard" (comparatively speaking), we can "lock the front door" so to speak by making sure all calls are authenticated to the endpoint, but what about the backend API?
 
-This is where I think Amplify really shines, I can add auth and get that working with all the Amazon Cognito goodness and then I add my backend API, whether I'm using Amazon AppSync or Amazon API Gateway we simply ask for backend calls to be authenticated and Amplify takes care of wiring up authentication to the same Cognito pool. I can then use the `API` component and the framework takes care of authentication headers and even the URL signatures!
+This is where I think Amplify really shines, I can add auth and get that working with all the Cognito goodness and then I add my backend API, whether I'm using AppSync or API Gateway we simply ask for backend calls to be authenticated and Amplify takes care of wiring up authentication to the same Cognito pool. I can then use the `API` component and the framework takes care of authentication headers and even the URL signatures!
 
 ### Wrap your app around me
 
