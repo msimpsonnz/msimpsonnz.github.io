@@ -4,16 +4,16 @@ layout: default
 <div class="post">
 <h1>Tag: {{ page.tag }}</h1>
 <ul>
+<div class="tags">
 {% for post in site.tags[page.tag] %}
   <li><a href="{{ post.url }}">{{ post.title }}</a> ({{ post.date | date_to_string }})<br>
     {{ post.description }}
-    <div class="tags">Tags:
         {% for tag in post.tags %}
             <li>{{ tag }}</li>
         {% endfor %}
-    </div>
   </li>
 {% endfor %}
+</div>
 </ul>
 </div>
 <hr>
