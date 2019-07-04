@@ -2,7 +2,7 @@
 layout: post
 title: Using the new .NET Core 3 (Preview) JSON Serialization with Lambda Custom Runtime
 summary: Here we take a look at the new builtin serialization capabilities of .NET Core 3, using Lambda Custom Runtime we remove the Newtonsoft library and add a shim for the existing function handler.
-tags: [aws, elasticloadbalancing, lambda, cloudwatch]
+tags: [aws, elasticloadbalancing, lambda, cloudwatch, dotnet]
 ---
 
 ### Built for speed
@@ -99,14 +99,28 @@ I've used [locust.io](https://locust.io) in the past so that was my choice again
 locust -f ./net30-native/test.py --no-web -c 1000 -r 100 --host=$host --csv=net30-native --run-time 1m
 ```
 
+I wanted to look at calls that were over 100ms as anything under gets rounded to 100. So I added an additional function that builds some random data into the response payload, otherwise the function is just returning a string and not actually doing much work.
+
 Method | Name | # Reqs | # Fail | Median | Average | Min | Max | Requests/s 
 --- | --- | --- | --- | --- | --- | --- | --- | ---
 GET | /lambda/net30-native | 19019 | 0 | 1200 | 1235 | 240 | 3937 | 307.27
 GET | /lambda/net30-newton | 18520 | 0 | 1200 | 1253 | 249 | 3999 | 305.23
 
-So there is not that much in it when I comes to requests.
+So Net30.Native is the function using new Microsoft library and Net30.Netwon is the Json.NET library, but on the face of it there is not that much in it when I comes to requests.
 
-So what about from a Lambda perspective? The important thing here is `Billed Duration` and for this we need CloudWatch Insights.
+So what about from a Lambda perspective? Will take the ALB out of the equation and just look at any improvements we are getting on the function duration. The important thing here is `Billed Duration` and for this we need CloudWatch Insights.
+
+I used the following query:
+```
+filter @type = "REPORT" |
+fields @requestId, @billedDuration |
+stats avg(@billedDuration) as AVG,
+min(@billedDuration) as Min,
+max(@billedDuration) as Max,
+count(min(@billedDuration)) as Count,
+sum(@billedDuration) as Total,
+count(@requestId) as Req
+```
 
 [<img src="{{ site.baseurl }}/images/2019-07-03-lambda-dotnet-json/native.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-07-03-lambda-dotnet-json/native.png")
 
@@ -117,8 +131,8 @@ Name | Avg  | Min | Max | Under 100ms | Total Duration | Total Req
 Net30.Native | 162.6017 | 100 | 2600 | 12 | 3217400 | 19787
 Net30.Newton | 265.0536 | 100 | 2600 | 13 | 5121100 | 19321
 
-Look at that!
+Look at that! 
 
 5,121,100 vs 3,217,400
 1,903,700 less!
-Which works out at ~37% reduction in cost.
+Which works out at ~37% reduction in cost!
