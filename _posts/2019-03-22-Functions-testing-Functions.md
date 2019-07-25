@@ -53,7 +53,7 @@ Check out the [GitHub repo] for the source, it's pretty rough, I ended up using 
 
 Below is the main orchestrator function, which take a JSON array as the input, batches this up and then runs an activity function for each request.
 
-```
+```csharp
        [FunctionName("HttpLoader")]
         public static async Task<List<string>> RunOrchestrator(
             [OrchestrationTrigger] DurableOrchestrationContext context)

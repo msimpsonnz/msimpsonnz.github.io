@@ -14,7 +14,7 @@ The catalyst behind this post was to benchmark some cross partition queries, so 
 
 In this example, we are using a super simple device registration store, when we register a new device we create a document and specify and 'id' used by Cosmos and we also duplicate this field to 'uid' in the same doc so we can query by both. Then we have the partition key field which we have called 'device' which is a hash of the actual id, so the document looks like this.
 
-```
+```json
 {
     "id": "47d1fe45-667f-4a8d-9e16-a2caba598172", //Cosmos id
     "uid": "47d1fe45-667f-4a8d-9e16-a2caba598172", //same as id above
@@ -30,7 +30,7 @@ Ok, so now down to actually running a query cross partition, this is being done 
 Query by id, below returns the following:
 `Cross Partition Query by Id Duration: 00:00:34.9694223 - RU:51647.73`
 
-```
+```csharp
     public static async Task RunQueryById(DocumentClient _client, IOptions<CosmosConfig> _cosmosConfig, string queryId, bool crossPartition = false)
     {
         var feedOptions = new FeedOptions
@@ -52,7 +52,7 @@ Query by id, below returns the following:
 Query by id, below returns the following:
 `Cross Partition Query by Property Duration: 00:00:11.1021038 - RU:5.74`
 
-```
+```csharp
     public static async Task RunQueryByProp(DocumentClient _client, IOptions<CosmosConfig> _cosmosConfig, string queryId, bool crossPartition = false)
     {
         var feedOptions = new FeedOptions {

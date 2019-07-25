@@ -45,19 +45,21 @@ I know from experience that I was going to need to "wrangle" the data to some de
 Ok so now it was time for Jupyter, these Notebooks are great the offer a simple environment to create a live document for a variety of coding languages, great for documentation and comments, charts and live code. I really like them for Python as I can run a single command without having to use a shell (REPL) or saving to a script and executing over and over.
 
 I used Pandas which is a great Python library for data, I extracted the "Features" from my transformed dataset
-```features = df[["Year","Month","Day","Hour","Distance","Elev Gain", "Elev Loss"]]```
+```python
+features = df[["Year","Month","Day","Hour","Distance","Elev Gain", "Elev Loss"]]
+```
 
 I had a string column in the dataset for location of the activity and needed to convert this to something the model could actually use, so I used the Pandas "Dummies" features which basically gets all the unique strings in the column and pivots the data so that I get a new column for each string and a "1" or "0" as the value, this is often referred to as ["One Hot" encoding](https://machinelearningmastery.com/how-to-one-hot-encode-sequence-data-in-python/).
 
 I had used Workbench to extract "Hours", "Minutes" and "Seconds" from my actual running time, I then needed to combine these to make my label for the model. I decided just to convert these into seconds and add them all together.
-```
+```python
 labelsraw = df[["Act_Hour", "Act_Min", "Act_Sec"]]
 labels = labelsraw["Act_Hour"]*60*60 + labelsraw["Act_Min"]*60 + labelsraw["Act_Sec"]
 ```
 
 So now I have my features and label, I need to split the dataset and train a model. We split the data for training so we end up with a "blind" trial. I build the model using the "training" set and then use the "test" data which the model has never seen before to see how good it will be.
 
-```
+```python
 from sklearn.model_selection import train_test_split
 X_train, x_test, y_train, y_test = train_test_split(data, labels, test_size=0.7, random_state=7)
 
@@ -83,7 +85,7 @@ Cool, so I managed `4.72km in 29.44`
 
 The computer says...
 
-```
+```python
 predictRun = np.array([2018,7,27,12,4.72,40,39,0,0,0,0,0,0,1,0,0,0,0]).reshape(1,-1)
 rawResult = model.predict(predictRun)
 resultRun = str(datetime.timedelta(seconds=rawResult[0]))

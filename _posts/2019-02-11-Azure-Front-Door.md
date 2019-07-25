@@ -12,7 +12,7 @@ SSL offload, global load balancing, WAF, DDOS protection and more! As we are see
 I was putting together a [Blazor demo] that needed Azure Functions for the API layer and storage for static hosting and file uploads. This was a good opportunity to test things out.
 
 Pro tip: first you need the updated CLI bits
-```
+```bash
 az extension add --name front-door
 ```
 

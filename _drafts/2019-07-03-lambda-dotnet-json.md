@@ -111,7 +111,7 @@ So Net30.Native is the function using new Microsoft library and Net30.Netwon is 
 So what about from a Lambda perspective? Will take the ALB out of the equation and just look at any improvements we are getting on the function duration. The important thing here is `Billed Duration` and for this we need CloudWatch Insights.
 
 I used the following query:
-```
+```sql
 filter @type = "REPORT" |
 fields @requestId, @billedDuration |
 stats avg(@billedDuration) as AVG,

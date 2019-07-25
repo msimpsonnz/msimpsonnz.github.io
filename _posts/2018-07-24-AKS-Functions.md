@@ -53,7 +53,7 @@ As I said before I have been using Durable Functions in this project and somethi
 
 I wasn't done yet, so I decided to make a K8s version of my Functions project, that was simple and added my existing code to the new project. I ended up with a new Dockerfile but did run into some issues building the image and having to reference an external project dependency which contains my core models and services.
 
-```
+```docker
 FROM microsoft/dotnet:2.1-sdk AS installer-env
 
 COPY ./Ringo.Common/ /src/Ringo.Common

@@ -15,7 +15,7 @@ So I figured we could drop one of my Lambda functions and get API Gateway to pos
 
 This is what the main CDK file looks like now with regards to API Gateway and SQS.
 
-```
+```typescript
     //Create an IAM Role for API Gateway to assume
     const apiGatewayRole = new iam.Role(sharedStack, 'ApiGatewayRole', {
     assumedBy: new ServicePrincipal('apigateway.amazonaws.com')

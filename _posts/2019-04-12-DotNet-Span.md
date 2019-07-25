@@ -24,7 +24,7 @@ So I built a little [demo] to reproduce the sample environment and benchmark. Al
 
 String is immutable! That is all!
 
-```
+```csharp
     public Event CreateEventWithSpan(EventGridEvent eventGridEvent)
     {
         ReadOnlySpan<char> subject = eventGridEvent.Subject;

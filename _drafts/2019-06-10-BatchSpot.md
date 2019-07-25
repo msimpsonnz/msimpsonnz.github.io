@@ -41,7 +41,7 @@ Using EC2 Spot instances is a great solution for this, this isn't a mission crit
 So a quick highlight of the some of the CDK code we need:
 
 #### Create the IAM roles and permissions required
-```
+```typescript
     const batchServiceRole = new iam.Role(this, 'batchServiceRole', {
       roleName: 'batchServiceRole',
       assumedBy: new ServicePrincipal('batch.amazonaws.com'),
@@ -79,7 +79,7 @@ So a quick highlight of the some of the CDK code we need:
 *Note* You need to create  IAM Instance profile for the containers to execute under, just creating a role in CDK is not enough
 
 #### Create the Batch Compute
-```
+```typescript
     const compEnv = new batch.CfnComputeEnvironment(this, 'batchCompute', {
       type: 'MANAGED',
       serviceRole: batchServiceRole.roleArn,
@@ -108,7 +108,7 @@ So a quick highlight of the some of the CDK code we need:
 *Important* "instanceRole" should be the IAM Role Name, NOT the IAM Role ARN, if you get this incorrect you will end up with a "INVALID" Batch Compute Environment and need to fix the name and recreate it from scratch.
 
 #### Create a Job Definition
-```
+```typescript
     new batch.CfnJobDefinition(this, 'batchJobDef', {
       jobDefinitionName: "s3select-dotnet",
       type: "container",
@@ -133,7 +133,7 @@ So a quick highlight of the some of the CDK code we need:
 The nice thing here is that I can inject my SQS details from earlier on in the stack and pass them into the container as environment variables.
 
 Then I jump to the Console or CLI and submit my job, something like the example:
-```
+```bash
 aws batch submit-job --job-name jobdemo --job-queue batchJobSpot  --job-definition s3select-dotnet --array-properties size=100 --container-overrides environment=[{name=S3_QUERY_LIMIT,value=2000}] --generate-cli-skeleton
 ```
 

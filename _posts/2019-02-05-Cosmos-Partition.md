@@ -20,7 +20,7 @@ For the majority of queries we will know the partition key, but for a handful we
 
 In this example, we are using a super simple device registration store, when we register a new device we create a document and specify and 'id' used by Cosmos and we also duplicate this field to 'uid' in the same doc so we can query by both. Then we have the partition key field which we have called 'device' which is a hash of the actual id, more on that later. So the document looks like this.
 
-```
+```json
 {
     "id": "47d1fe45-667f-4a8d-9e16-a2caba598172", //Cosmos id
     "uid": "47d1fe45-667f-4a8d-9e16-a2caba598172", //same as id above
@@ -44,16 +44,22 @@ The code for this can be found [here](https://github.com/msimpsonnz/msft-misc/tr
 So we have some (LOTS) of device id's, these are in a GUID format and don't really have any strong relationship between each other. As per the Ignite video above we want a partition strategy that will provide a good distribution of data, so we have a scenario of 10M device id's but 10M partitions is no good so how would we logically group them, what we can do is break them up in to buckets and shard them into partitions. Great theory but how do we ensure even distribution on seemingly random data? We 'bucket' the data and then hash the device id so it falls into one of the buckets, [this](https://crypto.stackexchange.com/questions/17990/sha256-output-to-0-99-number-range/17994#17994) is a great discussion on the topic.
 
 We first convert the GUID to a ByteArray and then cast it to an integer
-```int partitionKey = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0);```
+```csharp
+int partitionKey = BitConverter.ToInt32(Guid.NewGuid().ToByteArray(), 0);
+```
 
 Then we bucket that integer using the modulo operator which is the remainder after division, in this case we are using 256 buckets
-```int bucket = partitionKey % 256;```
+```csharp
+int bucket = partitionKey % 256;
+```
 
 The we hash
-```var partition = sha256.ComputeHash(BitConverter.GetBytes(bucket));```
+```csharp
+var partition = sha256.ComputeHash(BitConverter.GetBytes(bucket));
+```
 
 Once we have the hash we can extract the first 10 characters as a string like this
-```
+```csharp
     private static string GetStringFromHash(byte[] hash)
     {
         StringBuilder result = new StringBuilder();

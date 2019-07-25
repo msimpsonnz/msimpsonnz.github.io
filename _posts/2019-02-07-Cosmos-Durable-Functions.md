@@ -11,7 +11,7 @@ I've been working with Cosmos DB a fair bit recently, so check out my previous p
 
 We have created our Cosmos DB service, database and collection (using a specified partition key), detailed link for this via CLI is [here](https://docs.microsoft.com/en-us/azure/cosmos-db/scripts/create-database-account-collections-cli?toc=%2Fcli%2Fazure%2Ftoc.json#sample-script)
 
-```
+```bash
 az Cosmos DB collection create \
     --resource-group $resourceGroupName \
     --collection-name $containerName \
@@ -39,7 +39,7 @@ If I could run my code closer to the database I could reduce the network latency
 
 So we start with a HTTP trigger function that kicks off the process and builds a Durable Orchestrator which is the context the operation will run under.
 
-```
+```csharp
     [FunctionName("BulkLoader_HttpStart")]
     public static async Task<HttpResponseMessage> HttpStart(
         [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
@@ -61,7 +61,7 @@ This our Orchestrator function, which looks for a configuration setting on `Batc
 The function then creates a `Activity` task for each of those, this will be the actual function that does the work.
 The function then waits for all the Activity tasks to complete and returns a result.
 
-```
+```csharp
     [FunctionName("BulkLoader")]
     public static async Task<bool> RunOrchestrator(
         [OrchestrationTrigger] DurableOrchestrationContext context)
@@ -83,7 +83,7 @@ The function then waits for all the Activity tasks to complete and returns a res
 
 This is the Activity Task, the function that actually does the work with Cosmos. I use the Bulk Executor library as per above to do the insert of documents.
 
-```
+```csharp
     [FunctionName("BulkLoader_Batch")]
     public static async Task<bool> Import([ActivityTrigger] int batch, ILogger log)
     {
@@ -113,7 +113,7 @@ Ok, so I added some retry logic to the Durable Function, which sorted the issue 
 
 This is the retry logic for the new Orchestrator Function
 
-```
+```csharp
     [FunctionName("BulkLoader")]
     public static async Task<bool> RunOrchestrator(
         [OrchestrationTrigger] DurableOrchestrationContext context)
