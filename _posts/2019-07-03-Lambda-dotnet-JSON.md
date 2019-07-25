@@ -122,9 +122,9 @@ sum(@billedDuration) as Total,
 count(@requestId) as Req
 ```
 
-[<img src="{{ site.baseurl }}/images/2019-07-03-lambda-dotnet-json/native.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-07-03-lambda-dotnet-json/native.png")
+[<img src="{{ site.baseurl }}/images/2019-07-03-Lambda-dotnet-JSON/native.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-07-03-Lambda-dotnet-JSON/native.png")
 
-[<img src="{{ site.baseurl }}/images/2019-07-03-lambda-dotnet-json/newton.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-07-03-lambda-dotnet-json/newton.png")
+[<img src="{{ site.baseurl }}/images/2019-07-03-Lambda-dotnet-JSON/newton.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-07-03-Lambda-dotnet-JSON/newton.png")
 
 Name | Avg  | Min | Max | Under 100ms | Total Duration | Total Req
 --- | --- | --- | --- | --- | --- | ---
