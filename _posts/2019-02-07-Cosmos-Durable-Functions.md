@@ -40,21 +40,21 @@ If I could run my code closer to the database I could reduce the network latency
 So we start with a HTTP trigger function that kicks off the process and builds a Durable Orchestrator which is the context the operation will run under.
 
 ```csharp
-    [FunctionName("BulkLoader_HttpStart")]
-    public static async Task<HttpResponseMessage> HttpStart(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
-        [OrchestrationClient]DurableOrchestrationClient starter,
-        ILogger log)
-    {
-        // Function input comes from the request content.
-        string instanceId = await starter.StartNewAsync("BulkLoader", null);
+[FunctionName("BulkLoader_HttpStart")]
+public static async Task<HttpResponseMessage> HttpStart(
+    [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")]HttpRequestMessage req,
+    [OrchestrationClient]DurableOrchestrationClient starter,
+    ILogger log)
+{
+    // Function input comes from the request content.
+    string instanceId = await starter.StartNewAsync("BulkLoader", null);
 
 
-        log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
+    log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
 
-        return starter.CreateCheckStatusResponse(req, instanceId);
-    }
+    return starter.CreateCheckStatusResponse(req, instanceId);
+}
 ```
 
 This our Orchestrator function, which looks for a configuration setting on `BatchSize` which is how many batches I want to run, in this case it is 100,000.
@@ -62,39 +62,39 @@ The function then creates a `Activity` task for each of those, this will be the 
 The function then waits for all the Activity tasks to complete and returns a result.
 
 ```csharp
-    [FunctionName("BulkLoader")]
-    public static async Task<bool> RunOrchestrator(
-        [OrchestrationTrigger] DurableOrchestrationContext context)
+[FunctionName("BulkLoader")]
+public static async Task<bool> RunOrchestrator(
+[OrchestrationTrigger] DurableOrchestrationContext context)
+{
+    int batchSize;
+    int.TryParse(Environment.GetEnvironmentVariable("BatchSize"), out batchSize);
+    var outputs = new List<bool>();
+    var tasks = new Task<bool>[batchSize];
+    for (int i = 0; i < batchSize; i++)
     {
-        int batchSize;
-        int.TryParse(Environment.GetEnvironmentVariable("BatchSize"), out batchSize);
-        var outputs = new List<bool>();
-        var tasks = new Task<bool>[batchSize];
-        for (int i = 0; i < batchSize; i++)
-        {
-            tasks[i] = context.CallActivityAsync<bool>("BulkLoader_Batch", i);
-        }
+        tasks[i] = context.CallActivityAsync<bool>("BulkLoader_Batch", i);
+    }
 
-        await Task.WhenAll(tasks);
+    await Task.WhenAll(tasks);
 
-        return true;
+    return true;
 }
 ```
 
 This is the Activity Task, the function that actually does the work with Cosmos. I use the Bulk Executor library as per above to do the insert of documents.
 
 ```csharp
-    [FunctionName("BulkLoader_Batch")]
-    public static async Task<bool> Import([ActivityTrigger] int batch, ILogger log)
-    {
-        log.LogInformation($"Prepare documents for batch {batch}");
-        string partitionKey = Environment.GetEnvironmentVariable("PartitionKey");
-        int docsPerBatch;
-        int.TryParse(Environment.GetEnvironmentVariable("DocsPerBatch"), out docsPerBatch);
-        List<string> documentsToImportInBatch = CosmosHelper.DocumentBatch(partitionKey, docsPerBatch, batch);
-        await BulkImport.BulkImportDocuments(documentsToImportInBatch);
-        return true;
-    }   
+[FunctionName("BulkLoader_Batch")]
+public static async Task<bool> Import([ActivityTrigger] int batch, ILogger log)
+{
+    log.LogInformation($"Prepare documents for batch {batch}");
+    string partitionKey = Environment.GetEnvironmentVariable("PartitionKey");
+    int docsPerBatch;
+    int.TryParse(Environment.GetEnvironmentVariable("DocsPerBatch"), out docsPerBatch);
+    List<string> documentsToImportInBatch = CosmosHelper.DocumentBatch(partitionKey, docsPerBatch, batch);
+    await BulkImport.BulkImportDocuments(documentsToImportInBatch);
+    return true;
+}   
 ```
 
 ### Scale to Fail
@@ -114,35 +114,35 @@ Ok, so I added some retry logic to the Durable Function, which sorted the issue 
 This is the retry logic for the new Orchestrator Function
 
 ```csharp
-    [FunctionName("BulkLoader")]
-    public static async Task<bool> RunOrchestrator(
-        [OrchestrationTrigger] DurableOrchestrationContext context)
+[FunctionName("BulkLoader")]
+public static async Task<bool> RunOrchestrator(
+[OrchestrationTrigger] DurableOrchestrationContext context)
+{
+    int batchSize;
+    int.TryParse(Environment.GetEnvironmentVariable("BatchSize"), out batchSize);
+
+    int firstRetryIntervalVar;
+    int.TryParse(Environment.GetEnvironmentVariable("FirstRetrySeconds"), out firstRetryIntervalVar);
+
+    int maxNumberOfAttemptsVar;
+    int.TryParse(Environment.GetEnvironmentVariable("MaxNumberOfAttempts"), out maxNumberOfAttemptsVar);
+
+    double backoffCoefficientVar;
+    double.TryParse(Environment.GetEnvironmentVariable("BackoffCoefficient"), out backoffCoefficientVar);
+
+    var retryOptions = new RetryOptions(
+        firstRetryInterval: TimeSpan.FromSeconds(firstRetryIntervalVar),
+        maxNumberOfAttempts: maxNumberOfAttemptsVar);
+    retryOptions.BackoffCoefficient = backoffCoefficientVar;
+
+    var outputs = new List<bool>();
+    var tasks = new Task<bool>[batchSize];
+    for (int i = 0; i < batchSize; i++)
     {
-        int batchSize;
-        int.TryParse(Environment.GetEnvironmentVariable("BatchSize"), out batchSize);
-
-        int firstRetryIntervalVar;
-        int.TryParse(Environment.GetEnvironmentVariable("FirstRetrySeconds"), out firstRetryIntervalVar);
-
-        int maxNumberOfAttemptsVar;
-        int.TryParse(Environment.GetEnvironmentVariable("MaxNumberOfAttempts"), out maxNumberOfAttemptsVar);
-
-        double backoffCoefficientVar;
-        double.TryParse(Environment.GetEnvironmentVariable("BackoffCoefficient"), out backoffCoefficientVar);
-
-        var retryOptions = new RetryOptions(
-            firstRetryInterval: TimeSpan.FromSeconds(firstRetryIntervalVar),
-            maxNumberOfAttempts: maxNumberOfAttemptsVar);
-        retryOptions.BackoffCoefficient = backoffCoefficientVar;
-
-        var outputs = new List<bool>();
-        var tasks = new Task<bool>[batchSize];
-        for (int i = 0; i < batchSize; i++)
-        {
-            tasks[i] = context.CallActivityWithRetryAsync<bool>("BulkLoader_Batch", retryOptions, i);
-        }
-
-        await Task.WhenAll(tasks);
-        return true;
+        tasks[i] = context.CallActivityWithRetryAsync<bool>("BulkLoader_Batch", retryOptions, i);
     }
+
+    await Task.WhenAll(tasks);
+    return true;
+}
 ```

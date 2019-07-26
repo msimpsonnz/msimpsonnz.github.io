@@ -25,17 +25,17 @@ So I built a little [demo] to reproduce the sample environment and benchmark. Al
 String is immutable! That is all!
 
 ```csharp
-    public Event CreateEventWithSpan(EventGridEvent eventGridEvent)
+public Event CreateEventWithSpan(EventGridEvent eventGridEvent)
+{
+    ReadOnlySpan<char> subject = eventGridEvent.Subject;
+    var lastSpaceIndex = subject.LastIndexOf('/');
+    return new Event()
     {
-        ReadOnlySpan<char> subject = eventGridEvent.Subject;
-        var lastSpaceIndex = subject.LastIndexOf('/');
-        return new Event()
-        {
-            Id = Guid.NewGuid().ToString(),
-            BlobName = subject.Slice(lastSpaceIndex + 1).ToString(),
-            EventData = eventGridEvent.Data
-        };
-    }
+        Id = Guid.NewGuid().ToString(),
+        BlobName = subject.Slice(lastSpaceIndex + 1).ToString(),
+        EventData = eventGridEvent.Data
+    };
+}
 ```
 
 So in order to get my parsed data back out into an object that I could persist in the database I have to call .ToString() on the Span... which allocates memory... which defeats the point and disproves my hypothesis!

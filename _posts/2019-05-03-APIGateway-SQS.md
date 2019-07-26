@@ -16,67 +16,67 @@ So I figured we could drop one of my Lambda functions and get API Gateway to pos
 This is what the main CDK file looks like now with regards to API Gateway and SQS.
 
 ```typescript
-    //Create an IAM Role for API Gateway to assume
-    const apiGatewayRole = new iam.Role(sharedStack, 'ApiGatewayRole', {
-    assumedBy: new ServicePrincipal('apigateway.amazonaws.com')
-    });
+//Create an IAM Role for API Gateway to assume
+const apiGatewayRole = new iam.Role(sharedStack, 'ApiGatewayRole', {
+assumedBy: new ServicePrincipal('apigateway.amazonaws.com')
+});
 
-    //Create an empty response model for API Gateway
-    var model :EmptyModel = {
-    modelId: "Empty"
-    };
+//Create an empty response model for API Gateway
+var model :EmptyModel = {
+modelId: "Empty"
+};
 
-    //Create a method response for API Gateway using the empty model
-    var methodResponse :MethodResponse = {
-    statusCode: '200',
-    responseModels: {'application/json': model}
-    };
+//Create a method response for API Gateway using the empty model
+var methodResponse :MethodResponse = {
+statusCode: '200',
+responseModels: {'application/json': model}
+};
 
-    //Add the method options with method response to use in API Method
-    var methodOptions :MethodOptions = {
-    methodResponses: [
-        methodResponse
-    ]
-    };
+//Add the method options with method response to use in API Method
+var methodOptions :MethodOptions = {
+methodResponses: [
+    methodResponse
+]
+};
 
-    //Create intergration response for SQS
-    var integrationResponse :IntegrationResponse = {
-    statusCode: '200'
-    };
+//Create intergration response for SQS
+var integrationResponse :IntegrationResponse = {
+statusCode: '200'
+};
 
-    //Create integration options for API Method
-    var integrationOptions :IntegrationOptions = {
-    credentialsRole: apiGatewayRole,
-    requestParameters: {
-        'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'"
-    },
-    requestTemplates: {
-        'application/json': 'Action=SendMessage&QueueUrl=$util.urlEncode("' + sqsQueue.queueUrl + '")&MessageBody=$util.urlEncode($input.body)'
-    },
-    integrationResponses: [
-        integrationResponse
-    ]
-    };
+//Create integration options for API Method
+var integrationOptions :IntegrationOptions = {
+credentialsRole: apiGatewayRole,
+requestParameters: {
+    'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'"
+},
+requestTemplates: {
+    'application/json': 'Action=SendMessage&QueueUrl=$util.urlEncode("' + sqsQueue.queueUrl + '")&MessageBody=$util.urlEncode($input.body)'
+},
+integrationResponses: [
+    integrationResponse
+]
+};
 
-    //Create the SQS Integration
-    const apiGatewayIntegration = new apigw.AwsIntegration({ 
-    service: "sqs",
-    path: sharedStack.env.account + '/' + sqsQueue.queueName,
-    integrationHttpMethod: "POST",
-    options: integrationOptions,
-    });
+//Create the SQS Integration
+const apiGatewayIntegration = new apigw.AwsIntegration({ 
+service: "sqs",
+path: sharedStack.env.account + '/' + sqsQueue.queueName,
+integrationHttpMethod: "POST",
+options: integrationOptions,
+});
 
-    //Create the API Gateway
-    const apiGateway = new apigw.RestApi(sharedStack, "Endpoint");
+//Create the API Gateway
+const apiGateway = new apigw.RestApi(sharedStack, "Endpoint");
 
-    //Create a API Gateway Resource
-    const msg = apiGateway.root.addResource('msg');
+//Create a API Gateway Resource
+const msg = apiGateway.root.addResource('msg');
 
-    //Create a Resource Method
-    msg.addMethod('POST', apiGatewayIntegration, methodOptions);
+//Create a Resource Method
+msg.addMethod('POST', apiGatewayIntegration, methodOptions);
 
-    //Grant API GW IAM Role access to post to SQS
-    sqsQueue.grantSendMessages(apiGatewayRole);
+//Grant API GW IAM Role access to post to SQS
+sqsQueue.grantSendMessages(apiGatewayRole);
 ```
 
 Check out the full source [here]

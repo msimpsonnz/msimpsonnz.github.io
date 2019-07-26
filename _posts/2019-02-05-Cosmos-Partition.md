@@ -60,15 +60,15 @@ var partition = sha256.ComputeHash(BitConverter.GetBytes(bucket));
 
 Once we have the hash we can extract the first 10 characters as a string like this
 ```csharp
-    private static string GetStringFromHash(byte[] hash)
+private static string GetStringFromHash(byte[] hash)
+{
+    StringBuilder result = new StringBuilder();
+    for (int i = 0; i < 10; i++)
     {
-        StringBuilder result = new StringBuilder();
-        for (int i = 0; i < 10; i++)
-        {
-            result.Append(hash[i].ToString("X2"));
-        }
-        return result.ToString();
+        result.Append(hash[i].ToString("X2"));
     }
+    return result.ToString();
+}
 ```
 
 Now we can store the document with a unique partition key and also use the same function to compute the partition on the fly and build this into subsequent queries, making them as qucik as they can be!

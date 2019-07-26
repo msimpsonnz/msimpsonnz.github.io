@@ -54,30 +54,30 @@ Check out the [GitHub repo] for the source, it's pretty rough, I ended up using 
 Below is the main orchestrator function, which take a JSON array as the input, batches this up and then runs an activity function for each request.
 
 ```csharp
-       [FunctionName("HttpLoader")]
-        public static async Task<List<string>> RunOrchestrator(
-            [OrchestrationTrigger] DurableOrchestrationContext context)
+[FunctionName("HttpLoader")]
+public static async Task<List<string>> RunOrchestrator(
+[OrchestrationTrigger] DurableOrchestrationContext context)
+{
+    var input = context.GetInput<List<User>>();
+
+    var outputs = new List<string>();
+
+    var batches = await context.CallActivityAsync<List<List<User>>>("HttpLoader_BatchReq", input);
+
+    var parallelTasks = new List<Task<string>>();
+
+    foreach (var batch in batches)
+    {
+        foreach (var user in batch)
         {
-            var input = context.GetInput<List<User>>();
+                Task<string> task = context.CallActivityAsync<string>("HttpLoader_Load", user);
+                parallelTasks.Add(task);
+        }
 
-            var outputs = new List<string>();
+    }
 
-            var batches = await context.CallActivityAsync<List<List<User>>>("HttpLoader_BatchReq", input);
-
-            var parallelTasks = new List<Task<string>>();
-
-            foreach (var batch in batches)
-            {
-                foreach (var user in batch)
-                {
-                        Task<string> task = context.CallActivityAsync<string>("HttpLoader_Load", user);
-                        parallelTasks.Add(task);
-                }
-
-            }
-
-            IEnumerable<string> results = await Task.WhenAll(parallelTasks);
-            return results.ToList();
+    IEnumerable<string> results = await Task.WhenAll(parallelTasks);
+    return results.ToList();
 }
 ```
 

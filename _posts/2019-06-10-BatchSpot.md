@@ -42,92 +42,92 @@ So a quick highlight of the some of the CDK code we need:
 
 #### Create the IAM roles and permissions required
 ```typescript
-    const batchServiceRole = new iam.Role(this, 'batchServiceRole', {
-      roleName: 'batchServiceRole',
-      assumedBy: new ServicePrincipal('batch.amazonaws.com'),
-      managedPolicyArns: [
-        'arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole'
-      ]
-    });
+const batchServiceRole = new iam.Role(this, 'batchServiceRole', {
+  roleName: 'batchServiceRole',
+  assumedBy: new ServicePrincipal('batch.amazonaws.com'),
+  managedPolicyArns: [
+    'arn:aws:iam::aws:policy/service-role/AWSBatchServiceRole'
+  ]
+});
 
-    const spotFleetRole = new iam.Role(this, 'spotFleetRole', {
-      roleName: 'AmazonEC2SpotFleetRole',
-      assumedBy: new ServicePrincipal('spotfleet.amazonaws.com'),
-      managedPolicyArns: [
-        'arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetTaggingRole'
-      ]
-    });
+const spotFleetRole = new iam.Role(this, 'spotFleetRole', {
+  roleName: 'AmazonEC2SpotFleetRole',
+  assumedBy: new ServicePrincipal('spotfleet.amazonaws.com'),
+  managedPolicyArns: [
+    'arn:aws:iam::aws:policy/service-role/AmazonEC2SpotFleetTaggingRole'
+  ]
+});
 
-    const batchInstanceRole = new iam.Role(this, 'batchInstanceRole', {
-      roleName: 'batchInstanceRole',
-      assumedBy: new iam.CompositePrincipal( 
-          new ServicePrincipal('ec2.amazonaws.com'),
-          new ServicePrincipal('ecs.amazonaws.com')),
-      managedPolicyArns: [
-        'arn:aws:iam::aws:policy/AmazonS3FullAccess'
-      ]
-    });
+const batchInstanceRole = new iam.Role(this, 'batchInstanceRole', {
+  roleName: 'batchInstanceRole',
+  assumedBy: new iam.CompositePrincipal( 
+      new ServicePrincipal('ec2.amazonaws.com'),
+      new ServicePrincipal('ecs.amazonaws.com')),
+  managedPolicyArns: [
+    'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+  ]
+});
 
-    new iam.CfnInstanceProfile(this, 'batchInstanceProfile', {
-      instanceProfileName: batchInstanceRole.roleName,
-      roles: [
-        batchInstanceRole.roleName
-      ]
-    });
+new iam.CfnInstanceProfile(this, 'batchInstanceProfile', {
+  instanceProfileName: batchInstanceRole.roleName,
+  roles: [
+    batchInstanceRole.roleName
+  ]
+});
 ```
 
 *Note* You need to create  IAM Instance profile for the containers to execute under, just creating a role in CDK is not enough
 
 #### Create the Batch Compute
 ```typescript
-    const compEnv = new batch.CfnComputeEnvironment(this, 'batchCompute', {
-      type: 'MANAGED',
-      serviceRole: batchServiceRole.roleArn,
-      computeResources: {
-        type: 'SPOT',
-        maxvCpus: 128,
-        minvCpus: 0,
-        desiredvCpus: 0,
-        spotIamFleetRole: spotFleetRole.roleArn,
-        instanceRole: batchInstanceRole.roleName,
-        instanceTypes: [
-          'optimal'
-        ],
-        subnets: [
-          vpc.publicSubnets[0].subnetId,
-          vpc.publicSubnets[1].subnetId,
-          vpc.publicSubnets[2].subnetId
-        ],
-        securityGroupIds: [
-          vpc.vpcDefaultSecurityGroup
-        ]
-      }
-    });
+const compEnv = new batch.CfnComputeEnvironment(this, 'batchCompute', {
+  type: 'MANAGED',
+  serviceRole: batchServiceRole.roleArn,
+  computeResources: {
+    type: 'SPOT',
+    maxvCpus: 128,
+    minvCpus: 0,
+    desiredvCpus: 0,
+    spotIamFleetRole: spotFleetRole.roleArn,
+    instanceRole: batchInstanceRole.roleName,
+    instanceTypes: [
+      'optimal'
+    ],
+    subnets: [
+      vpc.publicSubnets[0].subnetId,
+      vpc.publicSubnets[1].subnetId,
+      vpc.publicSubnets[2].subnetId
+    ],
+    securityGroupIds: [
+      vpc.vpcDefaultSecurityGroup
+    ]
+  }
+});
 ```
 
 *Important* "instanceRole" should be the IAM Role Name, NOT the IAM Role ARN, if you get this incorrect you will end up with a "INVALID" Batch Compute Environment and need to fix the name and recreate it from scratch.
 
 #### Create a Job Definition
 ```typescript
-    new batch.CfnJobDefinition(this, 'batchJobDef', {
-      jobDefinitionName: "s3select-dotnet",
-      type: "container",
-      containerProperties: {
-        image: this.accountId + ".dkr.ecr.us-east-1.amazonaws.com/mjsdemo-ecr:latest",
-        vcpus: 1,
-        memory: 128,
-        environment: [
-          {
-            name: "SQS_QUEUE_URL",
-            value: sqsQueue.queueUrl
-          },
-          {
-            name: "S3_QUERY_LIMIT",
-            value: " LIMIT 10000"
-          } 
-        ]
-      }
-    });
+new batch.CfnJobDefinition(this, 'batchJobDef', {
+  jobDefinitionName: "s3select-dotnet",
+  type: "container",
+  containerProperties: {
+    image: this.accountId + ".dkr.ecr.us-east-1.amazonaws.com/mjsdemo-ecr:latest",
+    vcpus: 1,
+    memory: 128,
+    environment: [
+      {
+        name: "SQS_QUEUE_URL",
+        value: sqsQueue.queueUrl
+      },
+      {
+        name: "S3_QUERY_LIMIT",
+        value: " LIMIT 10000"
+      } 
+    ]
+  }
+});
 ```
 
 The nice thing here is that I can inject my SQS details from earlier on in the stack and pass them into the container as environment variables.

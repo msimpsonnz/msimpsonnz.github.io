@@ -85,8 +85,8 @@ I ran into some issues with the initial implementation due to the JSON data stru
 To solve this quickly I ended up creating a custom class for the response and decorated the properties with the correct names.
 
 ```csharp
-    [JsonPropertyName("statusDescription")]
-    public string StatusDescription { get; set; }
+[JsonPropertyName("statusDescription")]
+public string StatusDescription { get; set; }
 ```
 
 Awesome! The ALB is serving requests and we can now benchmark our functions.
