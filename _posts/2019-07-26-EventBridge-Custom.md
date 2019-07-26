@@ -5,7 +5,7 @@ summary: A quick walkthrough of using AWS Event Bridge to publish custom events 
 tags: [aws, lambda, eventbridge, kinesis, s3]
 ---
 
-### Use events for all of the things!
+### Event all of the things!
 
 [Amazon Event Bridge](https://aws.amazon.com/eventbridge/) is a new service that allows SaaS applications to publish events to AWS. This is service has been built on [Amazon CloudWatch Events](https://docs.aws.amazon.com/AmazonCloudWatch/latest/events/WhatIsCloudWatchEvents.html) which is a near real-time stream of events from AWS services. So you could listen into to events that were happening on your AWS accounts, like EC2 Auto Scaling events or CloudTrail actions.
 
@@ -31,116 +31,115 @@ For the S3 Bucket and Firehose I have used the trusty and newly GA'd CDK, to get
 This is the CDK Stack, we don't have CloudFormation support for Event Bridge so we will setup that up using the SDK.
 
 ```typescript
-    //Create S3 bucket for the event store
-    const bucket = new s3.Bucket(this, "demo-evtbridge-custom");
+//Create S3 bucket for the event store
+const bucket = new s3.Bucket(this, "demo-evtbridge-custom");
 
-    //Create a IAM role for Firehose to use to put events
-    const s3Role = new iam.Role(this, "demo-evtbridge-s3-role", {
-      assumedBy: new ServicePrincipal('firehose.amazonaws.com')
-    });
+//Create a IAM role for Firehose to use to put events
+const s3Role = new iam.Role(this, "demo-evtbridge-s3-role", {
+    assumedBy: new ServicePrincipal('firehose.amazonaws.com')
+});
 
-    //Give the IAM Role write access to bucket
-    bucket.grantReadWrite(s3Role);
+//Give the IAM Role write access to bucket
+bucket.grantReadWrite(s3Role);
 
-    //Create an IAM role for Event Bridge to use to connect to Firehose
-    const evtRole = new iam.Role(this, "demo-evtbridge-firehose-role", {
-      assumedBy: new ServicePrincipal('events.amazonaws.com'),
-      roleName: 'demo-evtbridge-firehose-role'
-    });
+//Create an IAM role for Event Bridge to use to connect to Firehose
+const evtRole = new iam.Role(this, "demo-evtbridge-firehose-role", {
+    assumedBy: new ServicePrincipal('events.amazonaws.com'),
+    roleName: 'demo-evtbridge-firehose-role'
+});
 
-    //Give the IAM role access to Firehose
-    evtRole.addToPolicy(new PolicyStatement({
-      resources: ['*'],
-      actions: ['firehose:PutRecord','firehose:PutRecordBatch'] }));
+//Give the IAM role access to Firehose
+evtRole.addToPolicy(new PolicyStatement({
+    resources: ['*'],
+    actions: ['firehose:PutRecord','firehose:PutRecordBatch'] }));
 
-    //Create the Firehose with connection to S3, assign role and config
-    const deliveryStream = new firehose.CfnDeliveryStream(this, "stream-evtbridge-custom", {
-      deliveryStreamName: 'stream-evtbridge-custom',
-      deliveryStreamType: 'DirectPut',
-      s3DestinationConfiguration: {
-        bucketArn: bucket.bucketArn,
-        bufferingHints: {
-          intervalInSeconds: 300,
-          sizeInMBs: 5
-        },
-        compressionFormat: 'UNCOMPRESSED',
-        roleArn: s3Role.roleArn
-      }
+//Create the Firehose with connection to S3, assign role and config
+const deliveryStream = new firehose.CfnDeliveryStream(this, "stream-evtbridge-custom", {
+    deliveryStreamName: 'stream-evtbridge-custom',
+    deliveryStreamType: 'DirectPut',
+    s3DestinationConfiguration: {
+    bucketArn: bucket.bucketArn,
+    bufferingHints: {
+        intervalInSeconds: 300,
+        sizeInMBs: 5
+    },
+    compressionFormat: 'UNCOMPRESSED',
+    roleArn: s3Role.roleArn
+    }
 
-    });
+});
 ```
 
 So now we need a new Event Bridge - Event Bus, you get a "default" Event Bus out of the gate which is used for CloudWatch Events. So we will create a new one.
 
 ```python
-    accountId = sys.argv[1]
-    region = sys.argv[2]
-    evtbridgeBus = sys.argv[3]
-    evtbridgeRule = 'customRule'
-    evtbridgeRulePattern = '{\n  "source": [\n    "login.success"\n  ]\n}'
-    evtTargetArn = f'arn:aws:firehose:{region}:{accountId}:deliverystream/stream-evtbridge-custom'
-    evtTargetRoleArn = f'arn:aws:iam::{accountId}:role/demo-evtbridge-firehose-role'
+accountId = sys.argv[1]
+region = sys.argv[2]
+evtbridgeBus = sys.argv[3]
+evtbridgeRule = 'customRule'
+evtbridgeRulePattern = '{\n  "source": [\n    "login.success"\n  ]\n}'
+evtTargetArn = f'arn:aws:firehose:{region}:{accountId}:deliverystream/stream-evtbridge-custom'
+evtTargetRoleArn = f'arn:aws:iam::{accountId}:role/demo-evtbridge-firehose-role'
 
-    createEB = client.create_event_bus(
-        Name=evtbridgeBus,
-    )
-    print(createEB)
+createEB = client.create_event_bus(
+    Name=evtbridgeBus,
+)
+print(createEB)
 
-    put_rule = client.put_rule(
-        Name=evtbridgeRule,
-        EventPattern=evtbridgeRulePattern,
-        EventBusName=evtbridgeBus
-    )
-    print(put_rule)
+put_rule = client.put_rule(
+    Name=evtbridgeRule,
+    EventPattern=evtbridgeRulePattern,
+    EventBusName=evtbridgeBus
+)
+print(put_rule)
 
-    createTarget = client.put_targets(
-        Rule=evtbridgeRule,
-        EventBusName=evtbridgeBus,
-        Targets=[
-            {
-                'Id': 'someTargetId',
-                'Arn': evtTargetArn,
-                'RoleArn': evtTargetRoleArn
-            },
-        ]
-    )
-
+createTarget = client.put_targets(
+    Rule=evtbridgeRule,
+    EventBusName=evtbridgeBus,
+    Targets=[
+        {
+            'Id': 'someTargetId',
+            'Arn': evtTargetArn,
+            'RoleArn': evtTargetRoleArn
+        },
+    ]
+)
 ```
 
 Done! Now we just need to send some events. I have a dummy Python script that sends a stream of events that have random logon events, we only care about `success` so the Event Bridge rule will pick this up in the pattern match and only send these to Firehose.
 
 ```python
-    event = random.choice(['success', 'failed', 'refresh'])
-    print(event)
+event = random.choice(['success', 'failed', 'refresh'])
+print(event)
 
-    data = {
-        "customEvent": {
-            "loginEvent": event
-        }
+data = {
+    "customEvent": {
+        "loginEvent": event
     }
-    json_string = json.dumps(data)
-    print(json_string)
+}
+json_string = json.dumps(data)
+print(json_string)
 
-    source = f'login.{event}'
-    print(source)
+source = f'login.{event}'
+print(source)
 
-    putEvent = client.put_events(
-        Entries=[
-            {
-                'Source': source,
-                'DetailType': 'string',
-                'Detail': json_string,
-                'EventBusName': 'evtCustomAuth'
-            },
-        ]
-    )
-    print(putEvent)
+putEvent = client.put_events(
+    Entries=[
+        {
+            'Source': source,
+            'DetailType': 'string',
+            'Detail': json_string,
+            'EventBusName': 'evtCustomAuth'
+        },
+    ]
+)
+print(putEvent)
 ```
 
 Awesome so we can see from below that we are sending events randomly - success, failed and refresh
 
 [<img src="{{ site.baseurl }}/images/2019-07-27-EventBridge-Custom/client.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-07-27-EventBridge-Custom/client.png")
 
-Now lets look at the S3 output and we can see on the `success` message have come through!
+Now lets look at the S3 output and we can see only the `success` message have come through!
 
 [<img src="{{ site.baseurl }}/images/2019-07-27-EventBridge-Custom/s3.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-07-27-EventBridge-Custom/s3.png")
