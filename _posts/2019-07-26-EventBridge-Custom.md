@@ -2,7 +2,7 @@
 layout: post
 title: Using custom events with AWS Event Bridge
 summary: A quick walkthrough of using AWS Event Bridge to publish custom events and get them in S3
-tags: [aws, lambda, eventbridge, kinesis, s3]
+tags: [aws, lambda, eventbridge, kinesis, s3, cli]
 ---
 
 ### Event all of the things!
