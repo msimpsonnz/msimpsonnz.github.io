@@ -2,7 +2,7 @@
 layout: post
 title: Using the new .NET Core 3 (Preview) JSON Serialization with Lambda Custom Runtime
 summary: Here we take a look at the new builtin serialization capabilities of .NET Core 3, using Lambda Custom Runtime we remove the Newtonsoft library and add a shim for the existing function handler.
-tags: [aws, elasticloadbalancing, lambda, cloudwatch, dotnet]
+tags: [aws, elasticloadbalancing, lambda, cloudwatch, tools-sdks, dotnet]
 ---
 
 ### Built for speed
