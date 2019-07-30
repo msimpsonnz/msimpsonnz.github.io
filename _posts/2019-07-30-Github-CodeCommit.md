@@ -2,7 +2,7 @@
 layout: post
 title: How to clone Github repos to CodeCommit using Lambda
 summary: Regular backup of my Github repos to CodeCommit using Lambda, Lambda Layers and SAM
-tags: [aws, codecommit, lambda, ]
+tags: [aws, codecommit, lambda, serverlessrepo]
 ---
 
 ### Backup your backups
@@ -10,7 +10,7 @@ I've always had backups of my stuff, first it was photos on multiple hard drives
 
 I still keep copies of that stuff across different locations, but one thing that was bugging me was that I didn't have a backup of my Github repos.
 
-Now lets face it the world would probably be a better place without some of my code hacks lying around, but this is the place where I keep and host this blog. Again, some may argue that loosing this wouldn't be a bad thing either ;) But I've spent a lot of time writing here, I enjoy it and it's great to see if and how I am progressing. So it would be a shame to loose all that.
+Now lets face it, the world would probably be a better place without some of my code hacks lying around, but Github is the place where I keep and host this blog. Again, some may argue that loosing this wouldn't be a bad thing either ;) But I've spent a lot of time writing here, I enjoy it and it's great to see how I am progressing...so for me personally it would be a shame to loose all that.
 
 This blog has also been about learning new things and documenting as I go, so sometimes I pick the road less travelled in an effort to keep learning. So yes, the easy option would have been to configure my profile to have multiple remotes and push to both of them at the same time.
 
@@ -21,10 +21,10 @@ I wanted a challenge so came up with the idea of getting Lambda to poll my accou
 I know about 6 Git commands off the top of my *head* (ha ha Dad joke) and they can get me out of trouble with the odd rogue commit, but most of the time I'm using VS Code and the built in Git UI. So I guess I went into this a bit naive, but ended up doing a bit of research and found [GitPython](https://gitpython.readthedocs.io/en/stable/tutorial.html) which unsurprisingly is a Python wrapper for running Git commands.
 
 A few things to note about GitPython
-* You still need git! Yes that's write it's just a wrapper and you still need Git installed
-* You need Python 3! This tripped me up as I found another helper for CodeCommit that was in version 2 and gave up trying to port that.
+* You still need git! Yes that's write it's just a wrapper and you still need Git installed, more on this later!
+* You need Python 3, this tripped me up as I found another helper for CodeCommit that was in version 2 and gave up trying to port that.
 
-So the actual Python code wasn't too complex, I get a list of my repos from a JSON file I'm hosting...on Github, then clone these to the local storage on Lambda and push them to CodeCommit. That's right Lambda has some local storage you can use for this available at '/tmp'
+So the actual Python code wasn't too complex, I get a list of my repos from a JSON file I'm hosting...on Github (inception), then clone these to the local storage on Lambda and push them to CodeCommit. That's right Lambda has some local storage you can use for this available at '/tmp'
 
 This the Lambda entry function
 ```python
@@ -60,7 +60,7 @@ Simple enough right? Wrong!
 
 ### Layers and layers of fun
 
-If you run the above code as is, you will get an error `Failed to initialize: Bad git executable.` Yep that is correct, we need Git installed! We could install it every time the Lambda runs but that is less than ideal so I wanted to play around with [Lambda Layers](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) and end up finding someone that was doing CI builds with Lambda and has a [public layer](https://github.com/lambci/git-lambda-layer) with Git installed already!
+If you run the above code as is, you will get an error `Failed to initialize: Bad git executable.` Yep that is correct, we need Git installed, see my earlier note about GitPython! We could install it every time the Lambda runs but that is less than ideal so I wanted to play around with [Lambda Layers](https://docs.aws.amazon.com/lambda/latest/dg/configuration-layers.html) and end up finding someone that was doing CI builds with Lambda and has a [public layer](https://github.com/lambci/git-lambda-layer) with Git installed already!
 
 I'm planning on building my own layer but wanted to get the thing working first.
 
@@ -69,7 +69,7 @@ So a couple of steps in the write direction, I could clone the repo and add the 
 
 ### When in doubt add another layer
 
-Now this is a solved problem, CodeCommit will give you Git credentials, you can keep these in Parameter Store or Secrets Manager and you are away, the setup for that is [here](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-gc.html)
+This is a solved problem, CodeCommit will give you Git credentials, you can keep these in Parameter Store or Secrets Manager and you are away, the setup for that is [here](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-gc.html)
 
 I wanted to see if I could use the Lambda IAM role to get temporary credentials for CodeCommit. This is how it works on a development machine, you have to update `.gitconfig` to use a special AWS CLI command which goes off and gets a v4 signed URL to use in the background, the details on the developer setup are [here](https://docs.aws.amazon.com/codecommit/latest/userguide/setting-up-https-unixes.html#setting-up-https-unixes-credential-helper).
 
