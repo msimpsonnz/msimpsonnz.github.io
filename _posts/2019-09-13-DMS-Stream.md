@@ -10,14 +10,14 @@ tags: [aws, dms, kinesis]
 In a previous [post](https://msimpson.co.nz/MSK-Logging/) we looked a streaming with Kafka, however, another common pattern we see is getting the changes from a SQL database. Here we are going to use Change Data Capture or CDC, which allows us to stream the changes happening on the database. CDC uses log sequences and checkpoints so the changes can be resumed and replayed, but these differ between database engine so best to check what you need to enable this on your database. In this instance we are using MySQL so we need to change the [Binary Log Format](https://dev.mysql.com/doc/refman/8.0/en/binary-log-setting.html) to 'ROW' which will capture all changes at a row level.
 
 For this example, I have used the following:
-* Aurora MySQL - source database
-* Database Migration Service - this will connect to Aurora and get the changes
+* RDS MySQL - source database
+* Database Migration Service - this will connect to MySQL and get the changes
 * Kinesis Stream - DMS will write the changes to the stream
 * Kinesis Firehose - will stream from Kinesis to S3
 * S3 - the location for our streamed data
 
 For the actual data I have used the DMS sample data set which can be found on [GitHub](https://github.com/aws-samples/aws-database-migration-samples) and there is a guide [here](https://docs.aws.amazon.com/dms/latest/sbs/CHAP_On-PremOracle2Aurora.Appendix.SampleDatabase.html) on how to generate some activity to test out streaming changes.
-I've spun up an Aurora instance and use the scripts to build a database instance and then taken a snapshot. The code below uses that snapshot to provision a new Aurora instance, so if you are following along you will need to do the same.
+I've spun up an RDS instance and used the scripts to build a database instance and then taken a snapshot. The code below uses that snapshot to provision a new RDS instance, so if you are following along you will need to do the same.
 
 For the infrastructure piece, I've used the [CDK](https://aws.amazon.com/cdk/) again! I really love this as it lets me build a repeatable solution that I can share, but cuts the time down of writing CloudFormation or pasting a whole lot of instructions and screen shots from the console.
 
@@ -37,21 +37,29 @@ cdk deploy
 
 So now lets walk through the CDK stack components to understand how this has been built out.
 
-First we need an Aurora instance running a copy of our snapshot, here we create new parameter group with the Binary Log Format turned on.
+First we need an RDS instance running a copy of our snapshot, here we create new parameter group with the Binary Log Format turned on. We also need to place this in a VPC, we will just lookup the current 'default' VPC for this demo to save creating a new instance.
 
 ```typescript
-const auroraParam = new ClusterParameterGroup(this, 'dms-aurora-mysql5.7', {
-    family: 'aurora-mysql5.7',
+const vpc = ec2.Vpc.fromLookup(this, 'default', {
+    isDefault: true
+});
+
+const dbParam = new ParameterGroup(this, 'dms-param-mysql5.7', {
+    family: 'mysql5.7',
     parameters: {
     binlog_format: 'ROW'
     }
 });
 
-const auroraCluster = new CfnDBCluster(this, 'tickets-db', {
-    engine: 'aurora-mysql',
-    engineVersion: '5.7.12',
-    snapshotIdentifier: 'tickets-mysql',
-    dbClusterParameterGroupName: auroraParam.parameterGroupName
+const sourcedb = new rds.DatabaseInstanceFromSnapshot(this, 'dms-rds-source', {
+    engine: DatabaseInstanceEngine.MYSQL,
+    instanceClass: ec2.InstanceType.of(InstanceClass.BURSTABLE2, InstanceSize.SMALL),
+    snapshotIdentifier: 'tickets-mysql57',
+    vpc: vpc,
+    vpcPlacement: {
+    subnetType: SubnetType.PUBLIC,
+    },
+    parameterGroup: dbParam
 });
 ```
 
@@ -80,10 +88,10 @@ streamWriterRole.addToPolicy(new PolicyStatement({
 
 const source = new CfnEndpoint(this, 'dms-source', {
     endpointType: 'source',
-    engineName: 'aurora',
+    engineName: 'mysql',
     username: 'admin',
     password: 'Password1',
-    serverName: auroraCluster.attrEndpointAddress,
+    serverName: sourcedb.dbInstanceEndpointAddress,
     port: 3306
 });
 
@@ -156,3 +164,5 @@ Once the DMS task kicks off the table makes the initial load into S3 and we can 
 We then kick off our stored procedure on the MySQL source to generate some DB activity and once these have been processed through the streams we can run a S3 Select to see the updated records landing in S3.
 
 [<img src="{{ site.baseurl }}/images/2019-09-13-DMS-Stream/s3-select.png" style="width: 600px;"/>]({{ site.baseurl }}/images/2019-09-13-DMS-Stream/s3-select.png")
+
+I really like this architecture, we have established a streaming pattern which delivers the result without using any custom code, the only thing I have written is some TypeScript to output a CloudFormation stack!
