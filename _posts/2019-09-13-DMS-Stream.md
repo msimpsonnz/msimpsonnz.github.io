@@ -17,7 +17,7 @@ For this example, I have used the following:
 * S3 - the location for our streamed data
 
 For the actual data I have used the DMS sample data set which can be found on [GitHub](https://github.com/aws-samples/aws-database-migration-samples) and there is a guide [here](https://docs.aws.amazon.com/dms/latest/sbs/CHAP_On-PremOracle2Aurora.Appendix.SampleDatabase.html) on how to generate some activity to test out streaming changes.
-I've spun up an RDS instance and used the scripts to build a database instance and then taken a snapshot. The code below uses that snapshot to provision a new RDS instance, so if you are following along you will need to do the same.
+I've spun up an RDS instance and used the scripts to build a database instance and then taken a snapshot. The code below uses that snapshot to provision a new RDS instance, so if you are following along you will need to do the same, which is just a case of provisioning an RDS instance, connecting and running [this](https://github.com/aws-samples/aws-database-migration-samples/blob/master/mysql/sampledb/v1/install-rds.sql) script.
 
 For the infrastructure piece, I've used the [CDK](https://aws.amazon.com/cdk/) again! I really love this as it lets me build a repeatable solution that I can share, but cuts the time down of writing CloudFormation or pasting a whole lot of instructions and screen shots from the console.
 
