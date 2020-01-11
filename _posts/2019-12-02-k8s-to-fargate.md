@@ -1,7 +1,7 @@
 ---
 layout: post
-title: k8s to Fargate
-summary: In this post we take a look at the process of moving a NestJS API running in k8s to a task definition in AWS Fargate
+title: Joining Squawk Squad as a volunteer to help with cloud platforms
+summary: In this post we take a look at how I helped save cost by moving a NestJS API running in k8s to a task definition in AWS Fargate
 tags: [aws, fargate]
 ---
 
@@ -9,11 +9,15 @@ tags: [aws, fargate]
 
 Back in October 2019 I was asked if I wanted to help out with a social enterprise [Squawk Squad](https://squawksquad.co.nz), they were having some challenges with their cloud deployment and wanted some advice.
 
+I was looking for more than a side project that could have some impact and not just me hacking around in my spare time.
+
+This was something I could help with outside of work but use my background to help make a difference. I have done volunteering in the past but it has always felt like they were teaching me to do something rather than me at my best.
+
 > Squawk Squad is a social enterprise that aims to connect and engage a country in the protection and growth of our native bird life.
 
 > Squawk Squad connects people with sanctuaries via a web-app that gives them the ability to collectively fund sensor-connected traps in aid of sanctuary projects. The funders can see where the traps are deployed in the sanctuary and are notified via email in real-time when their trap activates. This indicates the positive impact that their investment is having on native birdlife. Funders also receive a “Squawker profile” which shows where they are on the nation-wide leaderboard - your points depend on how many pests you have trapped! This gives you an exact measure of the difference you are making towards our native birdlife.
 
-I spoke to the team and their mission really inspired me, I was looking for a side project that could have some impact and not just me hacking around in my spare time.
+I spoke to the team and their mission really inspired me to join up and help out.
 
 ## Getting to know you
 
