@@ -19,7 +19,7 @@ The great thing about AWS is there are so many ways to achieve the same outcome.
 
 ### Building a bridge
 
-I've built a sample for this [here]() but I am going to walk through the main aspects of getting this up and running.
+I've built a sample for this [here](https://github.com/msimpsonnz/aws-misc/tree/master/eventbridge-custom) but I am going to walk through the main aspects of getting this up and running.
 
 Working backwards, we need the following:
 * S3 Bucket to store the events
