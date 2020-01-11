@@ -122,6 +122,6 @@ So a little over a month after I got involved we cut over prod to the new Fargat
 
 Total monthly cost: ~$170 or $5 a day! So we cut the bill in half.
 
-I know this is going to change the world but I felt good to me to use my knowledge to help an amazing cause.
+I know this is going to change the world but I felt good to me to use my knowledge to help an amazing cause and that is $1000 a year they can spend on protecting more birds.
 
 This is the just the start, we are going to see if we can bring down the costs further by using Lambda and DynamoDB for a serverless backend.
